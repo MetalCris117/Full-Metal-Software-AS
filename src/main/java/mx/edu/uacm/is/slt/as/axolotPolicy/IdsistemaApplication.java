@@ -9,10 +9,10 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 //@SpringBootApplication
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 
-public class Main {
+public class IdsistemaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Main.class, args);
+		SpringApplication.run(IdsistemaApplication.class, args);
 	}
 
 }
