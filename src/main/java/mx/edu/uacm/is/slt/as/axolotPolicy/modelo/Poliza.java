@@ -1,5 +1,69 @@
 package mx.edu.uacm.is.slt.as.axolotPolicy.modelo;
 
+import java.util.UUID;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity 
 public class Poliza {
+
+    @Id
+    private UUID calve;
+    private int tipo;
+    private double monto;
+    private String descripcion;
+    private String curp;
+
+    public Poliza(){}
+
+    public Poliza(UUID clave,int tipo,double monto, String descripcion, String curp){
+        this.calve = clave;
+        this.tipo = tipo;
+        this.monto = monto;
+        this.descripcion = descripcion;
+        this.curp = curp;
+    }
+
+    public UUID getCalve() {
+        return calve;
+    }
+
+    public void setCalve(UUID calve) {
+        this.calve = calve;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getCurp() {
+        return curp;
+    }
+
+    public void setCurp(String curp) {
+        this.curp = curp;
+    }
+
     
 }
