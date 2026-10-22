@@ -7,10 +7,10 @@ import java.util.Date;
 public class Cliente {
     @Id
     private String curp;
-    private Date fecha_nacimiento;
+    private Date fechaNacimiento;
     private String nombres;
-    private String primer_apellido;
-    private String segundo_apellido;
+    private String primerApellido;
+    private String segundoApellido;
     private String direccion;
 
     public Cliente() {
