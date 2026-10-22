@@ -16,12 +16,12 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String curp, Date fecha_nacimiento, String nombres, String primer_apellido, String segundo_apellido, String direccion) {
+    public Cliente(String curp, Date fechaNacimiento, String nombres, String primerApellido, String segundoApellido, String direccion) {
         this.curp = curp;
-        this.fecha_nacimiento = fecha_nacimiento;
+        this.fechaNacimiento = fechaNacimiento;
         this.nombres = nombres;
-        this.primer_apellido = primer_apellido;
-        this.segundo_apellido = segundo_apellido;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
         this.direccion = direccion;
     }
     public String getCurp() {
@@ -30,11 +30,11 @@ public class Cliente {
     public void setCurp(String curp) {
         this.curp = curp;
     }
-    public Date getFecha_nacimiento() {
-        return fecha_nacimiento;    
+    public Date getfechaNacimiento() {
+        return fechaNacimiento;    
     }
-    public void setFecha_nacimiento(Date fecha_nacimiento) {
-        this.fecha_nacimiento = fecha_nacimiento;
+    public void setfechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
     public String getNombres() {
         return nombres;
@@ -42,17 +42,17 @@ public class Cliente {
     public void setNombres(String nombres) {
         this.nombres = nombres;
     }
-    public String getPrimer_apellido() {
-        return primer_apellido;
+    public String getprimerApellido() {
+        return primerApellido;
     }
-    public void setPrimer_apellido(String primer_apellido) {
-        this.primer_apellido = primer_apellido;
+    public void setprimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
     }
-    public String getSegundo_apellido() {
-        return segundo_apellido;
+    public String getsegundoApellido() {
+        return segundoApellido;
     }
-    public void setSegundo_apellido(String segundo_apellido) {
-        this.segundo_apellido = segundo_apellido;
+    public void setsegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
     }
     public String getDireccion() {
         return direccion;
@@ -75,7 +75,7 @@ public class Cliente {
     }
     @Override 
     public int hashCode() {
-        return Objects.hash(curp, fecha_nacimiento, nombres, primer_apellido, segundo_apellido, direccion);
+        return Objects.hash(curp, fechaNacimiento, nombres, primerApellido, segundoApellido, direccion);
     }
 
 }
