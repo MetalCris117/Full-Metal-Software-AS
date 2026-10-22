@@ -1,8 +1,9 @@
 package mx.edu.uacm.is.slt.as.axolotPolicy.modelo;
 
+import java.util.Date;
+import java.util.Objects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 
 @Entity
 public class ClienteAsegurado {
@@ -13,17 +14,25 @@ public class ClienteAsegurado {
     private String primerApellido;
     private String segundoApellido;
     private String direccion;
-    private LocalDate fechaNacimiento;
+    private Date fechaNacimiento;
 
     public ClienteAsegurado() {
     }
 
-    public ClienteAsegurado(String curp, String nombres, String primerApellido,
-            String segundoApellido, String direccion, LocalDate fechaNacimiento) {
+    public ClienteAsegurado(String curp, String nombres, String primerApellido, String segundoApellido, String direccion, Date fechaNacimiento) {
         this.curp = curp;
         this.nombres = nombres;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
+        this.direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public ClienteAsegurado(String curp, String nombres, String primerApellido, String direccion, Date fechaNacimiento) {
+        this.curp = curp;
+        this.nombres = nombres;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = null;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
     }
@@ -68,13 +77,34 @@ public class ClienteAsegurado {
         this.direccion = direccion;
     }
 
-    public LocalDate getFechaNacimiento() {
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+
+        if (super.equals(obj)) {
+            return true;
+        }
+
+        if (obj instanceof ClienteAsegurado) {
+            ClienteAsegurado otroCliente = (ClienteAsegurado) obj;
+            if (curp == null) {
+                return otroCliente.curp == null;
+            }
+            return curp.equalsIgnoreCase(otroCliente.curp);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(curp, nombres, primerApellido, segundoApellido, direccion, fechaNacimiento);
+    }
+
 }
