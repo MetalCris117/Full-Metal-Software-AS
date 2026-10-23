@@ -80,6 +80,7 @@ public class IdBeneficiarioPoliza {
         Objects.equals(clavePoliza, that.clavePoliza);
     }
 
+    @Override 
     public int hashCode(){
         return Objects.hash(nombres, primerApellido, segundoApellido,
                 fechaNacimiento, clavePoliza);
