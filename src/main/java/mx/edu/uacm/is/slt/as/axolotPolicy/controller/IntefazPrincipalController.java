@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IntefazPrincipalController {
 
+    /**
+     *Muestra la interfaz principal del sistema intermediario
+     *
+     * 
+     * @return el nombre del archivo de la pagina principal
+     */
     @GetMapping("/")
     public String mostrarPrincipal() {
         return "index"; //le dice a sprint boot que busque el archivo index.html en la carpeta templates
