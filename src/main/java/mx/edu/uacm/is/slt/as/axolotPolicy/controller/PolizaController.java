@@ -1,7 +1,10 @@
 package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
@@ -29,9 +32,31 @@ public class PolizaController {
         return clienteRestPoliza.get()
                 .uri("http://nachintoch.mx:8080/polizas")
                 .retrieve()
-                .body(new ParameterizedTypeReference<>(){});
+                .body(new ParameterizedTypeReference<>(){
+                });
     
     }
+
+    /**
+     * ERIK R4, R8 y R15 - PRM-GP / PRN-GP
+     * Realiza una peticion GET al sistema dueño
+     * para devolver todas las polizas del cliente con el CURP dado.
+     * Ruta: http://localhost:8081/polizas/cliente/{curp}
+     * @param curp CURP del cliente asegurado
+     * @return lista de polizas asociadas al cliente con esa CURP
+     */
+    @GetMapping("/polizas/cliente/{curp}")
+    public List<Poliza> getPolizasPorCurp(@PathVariable String curp) {
+
+        RestClient clienteRestPoliza = RestClient.create();
+
+        return clienteRestPoliza.get()
+                .uri("http://nachintoch.mx:8080/polizas/cliente/{curp}", curp)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+    }
+
 
    /**Realiza una peticion GET al sistema dueño 
     * para obtener las polizas de un beneficiario 
