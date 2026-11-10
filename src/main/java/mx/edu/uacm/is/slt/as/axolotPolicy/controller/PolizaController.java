@@ -33,8 +33,8 @@ public class PolizaController {
     
     }
 
-   /**
-    * 
+   /**Realiza una peticion GET al sistema dueño 
+    * para obtener las polizas de un beneficiario 
     * @return lista de polizas de un beneficiario
     */
     @GetMapping({"/polizas/b/{nombres}/{primer_apellido}"
