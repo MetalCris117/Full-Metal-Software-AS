@@ -1,12 +1,17 @@
 package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 
 import java.util.List;
-import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.ClienteAsegurado;
+
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+
+import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.ClienteAsegurado;
 
 // Indica que es un controlador REST
 @RestController
@@ -49,5 +54,26 @@ public class ClienteController {
                 });
 
         return clientes;
+    }
+
+    //ERIK R5 y R8 - NRM-MC
+    // Responde a una petición PUT para actualizar los datos de un cliente por su CURP
+    // Por ejemplo, en http://localhost:8081/cliente/ABC123
+    @PutMapping("/cliente/{curp}")
+    public ClienteAsegurado updateCliente(@PathVariable String curp, @RequestBody ClienteAsegurado clienteActualizado) {
+        RestClient clienteRest = RestClient.create();
+
+        // Asegura que el objeto lleve la CURP indicada en la URL
+        clienteActualizado.setCurp(curp);
+
+        // Envía la petición PUT con los datos en formato JSON al sistema dueño
+        ClienteAsegurado respuesta = clienteRest.put()
+                .uri("http://nachintoch.mx:8080/cliente/{curp}", curp)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(clienteActualizado)
+                .retrieve()
+                .body(ClienteAsegurado.class);
+
+        return respuesta;
     }
 }
