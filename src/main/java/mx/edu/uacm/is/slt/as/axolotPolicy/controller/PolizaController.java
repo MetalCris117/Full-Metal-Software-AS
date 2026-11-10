@@ -96,4 +96,28 @@ public class PolizaController {
             }
             return  listaPolizasBeneficiario;
     }
+
+    /** 
+     * Realiza una peticion GET al sistema dueño
+     * para devolver todas las polizas del tipo dado.
+     * Ruta: http://localhost:8081/polizas/tipo/{tipo}
+     * @param tipo Identificador numérico del tipo de póliza (0: Auto, 1: Vida, 2: Médico)
+     * @return lista de polizas del tipo especificado
+     */
+    @GetMapping("/polizas/tipo/{tipo}")
+    public List<Poliza> getPolizasPorTipo(@PathVariable int tipo) {
+
+        RestClient clienteRestPoliza = RestClient.create();
+
+        List<Poliza> listaPolizas = clienteRestPoliza.get()
+                .uri("http://nachintoch.mx:8080/polizas/{tipo}", tipo)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+
+        if (listaPolizas == null || listaPolizas.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return listaPolizas;
+    }
 }
