@@ -2,10 +2,12 @@ package mx.edu.uacm.is.slt.as.axolotPolicy.modelo;
 
 import java.util.Objects;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity 
+@Entity
 public class Poliza {
 
     @Id
@@ -13,11 +15,13 @@ public class Poliza {
     private int tipo;
     private double monto;
     private String descripcion;
+    @JsonProperty("curpCliente")
     private String curp;
 
-    public Poliza(){}
+    public Poliza() {
+    }
 
-    public Poliza(UUID clave,int tipo,double monto, String descripcion, String curp){
+    public Poliza(UUID clave, int tipo, double monto, String descripcion, String curp) {
         this.clave = clave;
         this.tipo = tipo;
         this.monto = monto;
@@ -25,11 +29,11 @@ public class Poliza {
         this.curp = curp;
     }
 
-    public UUID getclave() {
+    public UUID getClave() {
         return clave;
     }
 
-    public void setclave(UUID clave) {
+    public void setClave(UUID clave) {
         this.clave = clave;
     }
 
@@ -65,25 +69,23 @@ public class Poliza {
         this.curp = curp;
     }
 
-
     @Override
     public boolean equals(Object obj) {
 
-        if(super.equals(obj)){
+        if (super.equals(obj)) {
             return true;
         }
-        
-        if(obj instanceof Poliza){
-            Poliza otraPoliza = (Poliza)obj;
+
+        if (obj instanceof Poliza) {
+            Poliza otraPoliza = (Poliza) obj;
             return clave.equals(otraPoliza.clave);
         }
-       return false;
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clave,tipo,monto,descripcion,curp);
+        return Objects.hash(clave, tipo, monto, descripcion, curp);
     }
 
-    
 }
