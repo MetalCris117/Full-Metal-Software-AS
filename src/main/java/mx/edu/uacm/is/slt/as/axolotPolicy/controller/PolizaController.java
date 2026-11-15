@@ -120,4 +120,30 @@ public class PolizaController {
         }
         return listaPolizas;
     }
+
+    /**
+     * Realiza una peticion GET al sistema dueño
+     * para devolver todas las polizas de las que son beneficiarias
+     * las personas con la fecha de nacimiento dada.
+     * Ruta: http://localhost:8081/polizas/b/{fecha_nacimiento}
+     * @param fechaNacimiento Fecha de nacimiento del beneficiario (formato YYYY-MM-DD)
+     * @return lista de polizas asociadas a beneficiarios con esa fecha de nacimiento
+     */
+    @GetMapping("/polizas/b/{fecha_nacimiento}")
+    public List<Poliza> getPolizasBeneficiarioPorFecha(
+            @PathVariable(value = "fecha_nacimiento") String fechaNacimiento) {
+
+        RestClient clienteRestPoliza = RestClient.create();
+
+        List<Poliza> listaPolizas = clienteRestPoliza.get()
+                .uri("http://nachintoch.mx:8080/polizas/b/{fecha_nacimiento}", fechaNacimiento)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+
+        if (listaPolizas == null || listaPolizas.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return listaPolizas;
+    }
 }
