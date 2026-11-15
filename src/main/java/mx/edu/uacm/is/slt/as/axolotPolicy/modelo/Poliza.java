@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
