@@ -3,12 +3,14 @@ package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 import java.util.List;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
@@ -191,17 +193,32 @@ public class PolizaController {
         /**
          * Realiza una peticion DELETE al sistema dueño
          * para borrar la poliza con la clave dada.
+         * Antes de borrar revisa que la poliza exista.
          * Ruta: http://localhost:8081/poliza/{clave}
          * @param clave clave de la poliza que se va a borrar
+         * @return la poliza borrada, o 404 si no existe
          */
         @DeleteMapping("/poliza/{clave}")
-        public void eliminarPoliza(@PathVariable UUID clave) {
+        public ResponseEntity<Poliza> eliminarPoliza(@PathVariable UUID clave) {
 
                 RestClient clienteRestPoliza = RestClient.create();
+                String ruta = "http://nachintoch.mx:8080/poliza/{clave}";
+
+                Poliza poliza = clienteRestPoliza.get()
+                        .uri(ruta, clave)
+                        .retrieve()
+                        .body(Poliza.class);
+
+                if (poliza == null) {
+                        return ResponseEntity.notFound().build();
+                }
 
                 clienteRestPoliza.delete()
-                        .uri("http://nachintoch.mx:8080/poliza/{clave}", clave)
+                        .uri(ruta, clave)
                         .retrieve()
                         .toBodilessEntity();
+
+                return ResponseEntity.ok(poliza);
         }
+        
 }
