@@ -6,6 +6,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import java.util.UUID;
@@ -218,6 +219,34 @@ public class PolizaController {
                         .toBodilessEntity();
 
                 return ResponseEntity.ok(poliza);
+        }
+
+        /**
+         * Realiza una peticion PUT al sistema dueño
+         * para actualizar una poliza con los atributos dados.
+         * Ruta: http://localhost:8081/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}
+         * @param clave Identificador único (UUID) de la póliza a actualizar
+         * @param tipo Identificador numérico del tipo de póliza (0: Auto, 1: Vida, 2: Médico)
+         * @param monto Nuevo monto asegurado de la póliza
+         * @param descripcion Nueva descripción de la póliza
+         * @param curpCliente CURP del cliente asociado a la póliza
+         * @return objeto Poliza actualizado
+         */
+        @PutMapping("/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}")
+        public Poliza actualizarPoliza(
+                @PathVariable UUID clave,
+                @PathVariable int tipo,
+                @PathVariable double monto,
+                @PathVariable String descripcion,
+                @PathVariable("curp_cliente") String curpCliente) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                return clienteRestPoliza.put()
+                        .uri("http://nachintoch.mx:8080/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}",
+                                clave, tipo, monto, descripcion, curpCliente)
+                        .retrieve()
+                        .body(Poliza.class);
         }
         
 }
