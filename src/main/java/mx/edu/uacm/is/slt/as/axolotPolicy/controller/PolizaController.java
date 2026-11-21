@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
