@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.ArrayList;
 import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
@@ -184,5 +186,22 @@ public class PolizaController {
                 return new ArrayList<>();
                 }
                 return listaPolizas;
+        }
+
+        /**
+         * Realiza una peticion DELETE al sistema dueño
+         * para borrar la poliza con la clave dada.
+         * Ruta: http://localhost:8081/poliza/{clave}
+         * @param clave clave de la poliza que se va a borrar
+         */
+        @DeleteMapping("/poliza/{clave}")
+        public void eliminarPoliza(@PathVariable UUID clave) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                clienteRestPoliza.delete()
+                        .uri("http://nachintoch.mx:8080/poliza/{clave}", clave)
+                        .retrieve()
+                        .toBodilessEntity();
         }
 }
