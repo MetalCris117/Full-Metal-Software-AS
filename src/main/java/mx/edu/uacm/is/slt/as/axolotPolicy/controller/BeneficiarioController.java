@@ -8,6 +8,7 @@ import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.BeneficiarioPoliza;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
@@ -17,7 +18,8 @@ public class BeneficiarioController {
 
     @GetMapping({ "/beneficiario/{fecha_nacimiento}/{clave_poliza}/{nombres}/{primer_apellido}/{segundo_apellido}",
             "/beneficiario/{fecha_nacimiento}/{clave_poliza}/{nombres}/{primer_apellido}" })
-    public BeneficiarioPoliza getOne(@PathVariable("nombres") String nombres,
+    public BeneficiarioPoliza getOne(
+            @PathVariable("nombres") String nombres,
             @PathVariable("primer_apellido") String primerApellido,
             @PathVariable(value = "segundo_apellido", required = false) String segundoApellido,
             @PathVariable("fecha_nacimiento") Date fechaNacimiento,
@@ -64,5 +66,33 @@ public class BeneficiarioController {
                 });
 
         return beneficiarios;
+    }
+
+    @PostMapping({
+        "/beneficiario/{fecha_nacimiento}/{clave_poliza}/{porcentaje}/{nombres}/{primer_apellido}/{segundo_apellido}",
+        "/beneficiario/{fecha_nacimiento}/{clave_poliza}/{porcentaje}/{nombres}/{primer_apellido}"})
+    public BeneficiarioPoliza registrar(
+        @PathVariable ("fecha_nacimiento") Date fechaNacimiento,
+        @PathVariable ("clave_poliza") UUID clavePoliza,
+        @PathVariable ("porcentaje") byte porcentaje,
+        @PathVariable ("nombres") String nombres,
+        @PathVariable("primer_apellido") String primerApellido,
+        @PathVariable(value = "segundo_apellido", required = false) String segundoApellido){
+
+        RestClient clienteRest = RestClient.create();
+
+        if(segundoApellido != null){
+            String url = "http://nachintoch.mx:8080/beneficiario/{fecha_nacimiento}/{clave_poliza}/{porcentaje}/{nombres}/{primer_apellido}/{segundo_apellido}";
+            return clienteRest.post()
+            .uri(url, fechaNacimiento, clavePoliza, porcentaje, nombres, primerApellido, segundoApellido)
+            .retrieve()
+            .body(BeneficiarioPoliza.class);
+        }else{
+            String url = "http://nachintoch.mx:8080/beneficiario/{fecha_nacimiento}/{clave_poliza}/{porcentaje}/{nombres}/{primer_apellido}";
+            return clienteRest.post()
+            .uri(url, fechaNacimiento, clavePoliza, porcentaje, nombres, primerApellido)
+            .retrieve()
+            .body(BeneficiarioPoliza.class);
+        }
     }
 }
