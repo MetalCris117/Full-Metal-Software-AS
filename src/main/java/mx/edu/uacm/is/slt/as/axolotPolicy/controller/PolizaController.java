@@ -248,5 +248,18 @@ public class PolizaController {
                         .retrieve()
                         .body(Poliza.class);
         }
+        // GET - Consultar una póliza por su clave
+        @GetMapping("/poliza/{clave}")
+        public Poliza getOne(@PathVariable String clave) {
+
+             RestClient polizaRest = RestClient.create();
+
+             Poliza poliza = polizaRest.get()
+                .uri("http://nachintoch.mx:8080/poliza/{clave}", clave)
+                .retrieve()
+                .body(Poliza.class);
+
+        return poliza;
+         }
         
 }
