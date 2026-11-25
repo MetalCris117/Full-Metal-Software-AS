@@ -60,9 +60,7 @@ public class ClienteController {
         return clientes;
     }
 
-   
     // POST - Registro de clientes
-   
     @PostMapping("/cliente")
     public ClienteAsegurado registrarCliente(@RequestBody ClienteAsegurado nuevoCliente) {
 
@@ -98,7 +96,6 @@ public class ClienteController {
 
         return respuesta;
     }
-
 
     //ERIK R5 y R8 - NRM-MC
     // Responde a una petición PUT para actualizar los datos de un cliente por su CURP
