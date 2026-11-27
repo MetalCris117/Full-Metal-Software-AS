@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${modoEdicion} ? 'Axolotl Policy - Modificar Cliente' : 'Axolotl Policy - Alta de Cliente'">
+        Axolotl Policy - Gestión de Cliente
+    </title>
+    <link rel="stylesheet" th:href="@{/css/formulario-usuario.css}">
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="encabezado">
+        <div class="encabezado-izq">
+            <a th:href="@{/}" class="boton-volver">&larr; Volver al Inicio</a>
+
+            <a th:href="@{/}" class="logo">
+                <div class="logo-icono">
+                    <span>✿</span>
+                </div>
+                <h2>Axolotl Policy</h2>
+            </a>
+        </div>
+
+        <div class="opciones-usuario">
+            <span class="portal">Portal de intermediarios</span>
+            <a th:href="@{/}" class="boton-salir" title="Volver al inicio">
+                <span>⇥</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="contenedor-principal">
+
+        <!-- MIGAS DE PAN -->
+        <nav class="migas">
+            <a th:href="@{/}">Inicio</a>
+            <span>&gt;</span>
+            <strong th:text="${modoEdicion} ? 'Modificar Cliente' : 'Alta de cliente'">Alta de cliente</strong>
+        </nav>
+
+        <!-- TÍTULO Y SUBTÍTULO -->
+        <div class="titulo-seccion">
+            <h1 th:text="${modoEdicion} ? 'Modificar Datos de Cliente' : 'Registro de Nuevo Cliente'">
+                Registro de Nuevo Cliente
+            </h1>
+            <p th:text="${modoEdicion} ? 'Busca y actualiza los datos de un cliente asegurado.' : 'Registra un nuevo cliente asegurado del sistema'">
+                Registra un nuevo cliente asegurado del sistema
+            </p>
+        </div>
+
+        <!-- TARJETA DE BÚSQUEDA RÁPIDA (SOLO EN MODO MODIFICACIÓN - NRM-MC) -->
+        <section class="tarjeta-formulario" th:if="${modoEdicion}">
+            <div class="tarjeta-cabecera">
+                <h3>Búsqueda rápida</h3>
+                <span class="badge-modo">Modo Modificación</span>
+            </div>
+
+            <form th:action="@{/cliente/modificar/buscar}" method="get" class="fila-busqueda">
+                <div class="campo" style="flex: 1;">
+                    <input type="text" name="curp" maxlength="18"
+                           placeholder="Buscar cliente por CURP (18 caracteres)"
+                           th:value="${curpBuscada}" required>
+                </div>
+                <button type="submit" class="boton-primario">Consultar CURP</button>
+            </form>
+        </section>
+
+        <!-- TARJETA DE DATOS DEL CLIENTE (ALTA NRM-AC Y MODIFICACIÓN NRM-MC) -->
+        <section class="tarjeta-formulario">
+            <div class="tarjeta-cabecera">
+                <h3>Datos del cliente</h3>
+                <span class="nota-obligatorios">* Campos obligatorios</span>
+            </div>
+
+            <form th:action="${modoEdicion} ? @{/cliente/modificar} : @{/cliente/nuevo}" method="post">
+
+                <div class="grid-formulario">
+                    <!-- CURP -->
+                    <div class="campo">
+                        <label for="curp">CURP *</label>
+                        <input type="text" id="curp" name="curp" maxlength="18" minlength="18"
+                               placeholder="Ingresa los 18 caracteres"
+                               th:value="${cliente != null} ? ${cliente.curp} : ''"
+                               th:readonly="${modoEdicion and cliente != null and cliente.curp != null}"
+                               required>
+                    </div>
+
+                    <!-- FECHA DE NACIMIENTO -->
+                    <div class="campo">
+                        <label for="fechaNacimiento">Fecha de nacimiento *</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento"
+                               th:value="${fechaFormateada}" required>
+                    </div>
+
+                    <!-- NOMBRE(S) -->
+                    <div class="campo campo-completo">
+                        <label for="nombres">Nombre(s) *</label>
+                        <input type="text" id="nombres" name="nombres"
+                               placeholder="Ingresa el nombre o nombres"
+                               th:value="${cliente != null} ? ${cliente.nombres} : ''" required>
+                    </div>
+
+                    <!-- PRIMER APELLIDO -->
+                    <div class="campo">
+                        <label for="primerApellido">Primer apellido *</label>
+                        <input type="text" id="primerApellido" name="primerApellido"
+                               placeholder="Ingresa el primer apellido"
+                               th:value="${cliente != null} ? ${cliente.primerApellido} : ''" required>
+                    </div>
+
+                    <!-- SEGUNDO APELLIDO (OPCIONAL) -->
+                    <div class="campo">
+                        <label for="segundoApellido">Segundo apellido (Opcional)</label>
+                        <input type="text" id="segundoApellido" name="segundoApellido"
+                               placeholder="Ingresa el segundo apellido"
+                               th:value="${cliente != null} ? ${cliente.segundoApellido} : ''">
+                    </div>
+
+                    <!-- DIRECCIÓN -->
+                    <div class="campo campo-completo">
+                        <label for="direccion">Dirección *</label>
+                        <input type="text" id="direccion" name="direccion"
+                               placeholder="Calle, número, colonia, municipio y código postal"
+                               th:value="${cliente != null} ? ${cliente.direccion} : ''" required>
+                    </div>
+                </div>
+
+                <hr class="separador">
+
+                <div class="acciones-formulario">
+                    <a th:href="@{/}" class="boton-secundario">Cancelar</a>
+                    <button type="submit" class="boton-primario"
+                            th:text="${modoEdicion} ? 'Guardar Cambios' : 'Registrar Cliente'">
+                        Registrar Cliente
+                    </button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="pie-pagina">
+        <span>Axolotl Policy · Gestión de seguros</span>
+        <div class="estado-sistema">
+            <span class="punto-verde"></span>
+            Estado del Sistema Dueño: Conectado
+        </div>
+    </footer>
+
+</body>
+
+</html>
