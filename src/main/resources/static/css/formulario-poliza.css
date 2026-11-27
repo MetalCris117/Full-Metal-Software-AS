@@ -1,0 +1,31 @@
+.campo select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #0f172a;
+    background-color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo select:invalid {
+    color: #94a3b8;
+}
+
+.campo select option {
+    color: #0f172a;
+}
+
+.campo select:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
+}
+
+.nota-campo {
+    font-size: 12px;
+    color: #64748b;
+}

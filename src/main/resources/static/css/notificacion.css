@@ -1,0 +1,103 @@
+.contenedor-notificacion {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* TARJETA PARA OPERACIÓN EXITOSA */
+.tarjeta-exito {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 48px 56px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.circulo-exito {
+    width: 68px;
+    height: 68px;
+    background-color: #dcfce7;
+    color: #16a34a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 0 24px rgba(22, 163, 74, 0.18);
+}
+
+.etiqueta-exito {
+    background-color: #dcfce7;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+}
+
+/* PANTALLAS DE ERROR 503 Y 404 */
+.codigo-error {
+    font-size: 92px;
+    font-weight: 800;
+    line-height: 1;
+    color: #e11d48;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+}
+
+.etiqueta-error {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+}
+
+.titulo-notificacion {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    max-width: 540px;
+    line-height: 1.25;
+    margin-bottom: 12px;
+}
+
+.mensaje-notificacion {
+    font-size: 14px;
+    color: #64748b;
+    max-width: 470px;
+    line-height: 1.55;
+    margin-bottom: 28px;
+}
+
+.botones-notificacion {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.nota-inferior {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 26px;
+}
