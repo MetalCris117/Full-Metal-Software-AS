@@ -3,9 +3,9 @@ package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,22 +99,32 @@ public class ClienteController {
 
     //ERIK R5 y R8 - NRM-MC
     // Responde a una petición PUT para actualizar los datos de un cliente por su CURP
-    // Por ejemplo, en http://localhost:8081/cliente/ABC123
+    // Por ejemplo, en http://localhost:8081/cliente/ABC123 con los datos nuevos en JSON
     @PutMapping("/cliente/{curp}")
-    public ClienteAsegurado updateCliente(@PathVariable String curp, @RequestBody ClienteAsegurado clienteActualizado) {
+    public ClienteAsegurado updateCliente(@PathVariable String curp,
+            @RequestBody ClienteAsegurado clienteActualizado) {
         RestClient clienteRest = RestClient.create();
 
-        // Asegura que el objeto lleve la CURP indicada en la URL
-        clienteActualizado.setCurp(curp);
+        // La fecha va como texto aaaa-MM-dd, en UTC para que no se recorra un dia
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+        formatoFecha.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String fecha = formatoFecha.format(clienteActualizado.getFechaNacimiento());
 
-        // Envía la petición PUT con los datos en formato JSON al sistema dueño
-        ClienteAsegurado respuesta = clienteRest.put()
-                .uri("http://nachintoch.mx:8080/cliente/{curp}", curp)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(clienteActualizado)
+        // El sistema dueño recibe los datos dentro de la direccion
+        UriComponentsBuilder ruta = UriComponentsBuilder
+                .fromUriString("http://nachintoch.mx:8080")
+                .pathSegment("cliente", curp, clienteActualizado.getDireccion(), fecha,
+                        clienteActualizado.getNombres(), clienteActualizado.getPrimerApellido());
+
+        // El segundo apellido solo se agrega si existe
+        String segundo = clienteActualizado.getSegundoApellido();
+        if (segundo != null && !segundo.isBlank()) {
+            ruta.pathSegment(segundo);
+        }
+
+        return clienteRest.put()
+                .uri(ruta.build().encode().toUri())
                 .retrieve()
                 .body(ClienteAsegurado.class);
-
-        return respuesta;
     }
 }
