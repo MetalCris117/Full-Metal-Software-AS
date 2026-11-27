@@ -1,0 +1,450 @@
+
+/* =========================================
+   CONFIGURACIÓN GENERAL
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F5F6FA;
+    color: #252D40;
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado {
+    height: 88px;
+    width: 100%;
+
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E0E4EC;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 4.5%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #252D40;
+}
+
+.logo-icono {
+    width: 40px;
+    height: 40px;
+
+    background-color: #E81760;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-size: 30px;
+}
+
+.opciones-usuario {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.portal {
+    font-size: 14px;
+    color: #68758F;
+}
+
+.boton-salir {
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid #DCE1EA;
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #68758F;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.contenedor-principal {
+    width: 83.3%;
+    max-width: 1200px;
+
+    margin: 56px auto;
+
+    flex: 1;
+}
+
+
+/* =========================================
+   SECCIÓN DE BIENVENIDA
+========================================= */
+
+.bienvenida {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 38px;
+}
+
+.etiqueta {
+    color: #E81760;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bienvenida h1 {
+    font-size: 36px;
+    font-weight: normal;
+
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.bienvenida p {
+    color: #68758F;
+    font-size: 16px;
+}
+
+.estado-sesion {
+    background-color: #E8F7F0;
+
+    color: #13845F;
+
+    padding: 6px 12px;
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.punto-verde {
+    width: 7px;
+    height: 7px;
+
+    background-color: #15966B;
+    border-radius: 50%;
+}
+
+
+/* =========================================
+   TARJETAS DE GESTIÓN
+========================================= */
+
+.contenedor-tarjetas {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 24px;
+}
+
+.tarjeta {
+    background-color: #FFFFFF;
+
+    border: 1px solid #DFE4ED;
+    border-radius: 16px;
+
+    padding: 31px;
+
+    min-height: 330px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 0 4px 12px rgba(30, 45, 70, 0.02);
+}
+
+
+/* =========================================
+   ENCABEZADO DE LAS TARJETAS
+========================================= */
+
+.tarjeta-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.icono-clientes,
+.icono-polizas {
+    width: 60px;
+    height: 60px;
+
+    border-radius: 13px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 32px;
+}
+
+.icono-clientes {
+    background-color: #FCEAF1;
+    color: #E81760;
+}
+
+.icono-polizas {
+    background-color: #83C7FA;
+    color: #2876AC;
+}
+
+.categoria {
+    font-size: 11px;
+    font-weight: bold;
+    color: #68758F;
+}
+
+
+/* =========================================
+   CONTENIDO DE LAS TARJETAS
+========================================= */
+
+.tarjeta-contenido {
+    flex: 1;
+}
+
+.tarjeta-contenido h2 {
+    font-size: 25px;
+    font-weight: normal;
+
+    margin-bottom: 11px;
+}
+
+.tarjeta-contenido p {
+    color: #68758F;
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   BOTONES DE LAS TARJETAS
+========================================= */
+
+.tarjeta-botones {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+    border-top: 1px solid #DFE4ED;
+
+    padding-top: 24px;
+    margin-top: 20px;
+}
+
+.boton {
+    background-color: #E81760;
+
+    color: #FFFFFF;
+
+    text-decoration: none;
+    text-align: center;
+
+    padding: 15px 10px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: background-color 0.2s ease;
+}
+
+.boton:hover {
+    background-color: #C81050;
+}
+
+
+/* =========================================
+   MENSAJE DE SEGURIDAD
+========================================= */
+
+.mensaje-seguridad {
+    margin-top: 36px;
+
+    background-color: #E8F5FE;
+
+    border-radius: 13px;
+
+    padding: 23px 24px;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icono-seguridad {
+    width: 40px;
+    height: 40px;
+
+    background-color: #FFFFFF;
+    border-radius: 9px;
+
+    color: #3188C8;
+    font-size: 24px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mensaje-texto {
+    flex: 1;
+}
+
+.mensaje-texto h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.mensaje-texto p {
+    font-size: 13px;
+    color: #68758F;
+}
+
+.texto-seguridad {
+    font-size: 13px;
+    color: #2876AC;
+}
+
+
+/* =========================================
+   PIE DE PÁGINA
+========================================= */
+
+.pie-pagina {
+    width: 100%;
+    min-height: 72px;
+
+    border-top: 1px solid #E0E4EC;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 8.3%;
+
+    color: #68758F;
+    font-size: 12px;
+}
+
+.estado-sistema {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+
+/* =========================================
+   DISEÑO RESPONSIVO
+========================================= */
+
+@media (max-width: 850px) {
+
+    .contenedor-principal {
+        width: 90%;
+    }
+
+    .contenedor-tarjetas {
+        grid-template-columns: 1fr;
+    }
+
+    .bienvenida h1 {
+        font-size: 29px;
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .encabezado {
+        padding: 0 5%;
+    }
+
+    .portal {
+        display: none;
+    }
+
+    .contenedor-principal {
+        margin: 35px auto;
+    }
+
+    .bienvenida {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .bienvenida h1 {
+        font-size: 27px;
+    }
+
+    .tarjeta {
+        padding: 22px;
+    }
+
+    .tarjeta-botones {
+        grid-template-columns: 1fr;
+    }
+
+    .mensaje-seguridad {
+        flex-wrap: wrap;
+    }
+
+    .texto-seguridad {
+        width: 100%;
+        margin-left: 56px;
+    }
+
+    .pie-pagina {
+        padding: 20px 5%;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+}
