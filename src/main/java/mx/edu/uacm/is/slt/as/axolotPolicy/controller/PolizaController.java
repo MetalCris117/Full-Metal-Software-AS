@@ -3,6 +3,7 @@ package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 import java.util.List;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.ArrayList;
 import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 public class PolizaController {
@@ -28,14 +30,13 @@ public class PolizaController {
          */
         @GetMapping("/polizas")
         public List<Poliza> getAll() {
-
                 RestClient clienteRestPoliza = RestClient.create();
 
                 return clienteRestPoliza.get()
-                                .uri("http://nachintoch.mx:8080/polizas")
-                                .retrieve()
-                                .body(new ParameterizedTypeReference<>() {
-                                });
+                        .uri("http://nachintoch.mx:8080/polizas")
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        });
 
         }
 
@@ -54,10 +55,10 @@ public class PolizaController {
                 RestClient clienteRestPoliza = RestClient.create();
 
                 return clienteRestPoliza.get()
-                                .uri("http://nachintoch.mx:8080/polizas/cliente/{curp}", curp)
-                                .retrieve()
-                                .body(new ParameterizedTypeReference<>() {
-                                });
+                        .uri("http://nachintoch.mx:8080/polizas/cliente/{curp}", curp)
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        });
         }
 
         /**
@@ -69,31 +70,31 @@ public class PolizaController {
         @GetMapping({ "/polizas/b/{nombres}/{primer_apellido}",
                         "/polizas/b/{nombres}/{primer_apellido}/{segundo_apellido}" })
         public List<Poliza> getPolizasBeneficiario(
-                        @PathVariable(value = "nombres") String nombre,
-                        @PathVariable(value = "primer_apellido") String primerApellido,
-                        @PathVariable(value = "segundo_apellido", required = false) String segundoApellido) {
+                @PathVariable(value = "nombres") String nombre,
+                @PathVariable(value = "primer_apellido") String primerApellido,
+                @PathVariable(value = "segundo_apellido", required = false) String segundoApellido) {
 
                 RestClient clienteRestPBeneficiario = RestClient.create();
 
                 // checamos si segundoApellido no es null
                 String uriDestino = (segundoApellido != null)
-                                ? "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}/{segundo_apellido}"
-                                : "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}";
+                        ? "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}/{segundo_apellido}"
+                        : "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}";
                 // reviza primero si segundoApellido es distinto de null
                 // para realizar peticion get
                 List<Poliza> listaPolizasBeneficiario = (segundoApellido != null)
-                                ? (clienteRestPBeneficiario.get()
-                                                .uri(uriDestino, nombre, primerApellido, segundoApellido)
-                                                .retrieve()
-                                                .body(new ParameterizedTypeReference<>() {
-                                                }))
-                                // en el caso de que segundo apellido sea null
-                                // se hace la peticion get si el parametro segundoApeliido
-                                : (clienteRestPBeneficiario.get()
-                                                .uri(uriDestino, nombre, primerApellido)
-                                                .retrieve()
-                                                .body(new ParameterizedTypeReference<>() {
-                                                }));
+                        ? (clienteRestPBeneficiario.get()
+                                .uri(uriDestino, nombre, primerApellido, segundoApellido)
+                                .retrieve()
+                                .body(new ParameterizedTypeReference<>() {
+                                }))
+                        // en el caso de que segundo apellido sea null
+                        // se hace la peticion get si el parametro segundoApeliido
+                        : (clienteRestPBeneficiario.get()
+                                .uri(uriDestino, nombre, primerApellido)
+                                .retrieve()
+                                .body(new ParameterizedTypeReference<>() {
+                                }));
 
                 if (listaPolizasBeneficiario == null
                                 || listaPolizasBeneficiario.isEmpty()) {
@@ -260,6 +261,46 @@ public class PolizaController {
                 .body(Poliza.class);
 
         return poliza;
-         }
-        
+        }
+
+        /**
+         * Realiza peticion post al sistema dueño
+         * Crea una neva poliza con los atributos dados
+         * @param clave  identificador unico UUID para las polizas
+         * @param tipo   tipo numerico de poliza de seguro 1,2,3 etc
+         * @param monto  monto asegurado por la poliza
+         * @param descripcion  descriciion de la poliza
+         * @param curpCliente  currp de 18 caracteres
+         * 
+         * @return ResponseEntity responde con el link de la poliza regristrada
+         *         si es exitosa y si no lo es responde con http 502 con el destalle 
+         *         del error si falla.
+         */
+        @PostMapping("/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}")
+        public ResponseEntity<?> postPoliza(
+                @PathVariable UUID clave,
+                @PathVariable int tipo,
+                @PathVariable double monto,
+                @PathVariable String descripcion,
+                @PathVariable(value = "curp_cliente") String curpCliente) {
+
+                        String uri = "http://nachintoch.mx:8080/poliza/{clave}"
+                                + "/{tipo}/{monto}/{descripcion}/{curp_cliente}";
+                        RestClient polizaRestClient = RestClient.create();
+                        /*Se en la descripcion manddan algo como Auto/camioneta se quitan
+                        * los / para evitar erroes.*/
+                        String formatDescripcion = descripcion.replace("/","-");
+                        //para asegurar que se pasan los argumentos en el orden correcto
+                        try {
+                                Poliza polizaNueva = polizaRestClient.post()
+                                .uri(uri,clave,tipo,monto,formatDescripcion,curpCliente)
+                                .retrieve()
+                                .body(Poliza.class); 
+                                return ResponseEntity.ok(polizaNueva);
+                        } catch (Exception e) {
+                               return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                                .body("No se pudo registrar la poiliza " + e.getMessage());
+                        }
+        }
+
 }

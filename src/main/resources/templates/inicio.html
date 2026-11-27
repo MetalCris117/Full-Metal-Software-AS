@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Axolot Policy - Inicio</title>
+
+    <!-- Conexión con el archivo CSS -->
+    <link rel="stylesheet" th:href="@{/css/inicio.css}">
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="encabezado">
+
+        <div class="logo">
+            <div class="logo-icono">
+                <span>✿</span>
+            </div>
+
+            <h2>Axolot Policy</h2>
+        </div>
+
+        <div class="opciones-usuario">
+            <span class="portal">Portal de intermediarios</span>
+
+            <a href="#" class="boton-salir" title="Cerrar sesión">
+                <span>⇥</span>
+            </a>
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="contenedor-principal">
+
+        <!-- BIENVENIDA -->
+        <section class="bienvenida">
+
+            <div class="bienvenida-texto">
+
+                <span class="etiqueta">TU CENTRO DE GESTIÓN</span>
+
+                <h1>Bienvenido a Axolot Policy</h1>
+
+                <p>
+                    Tus clientes y sus pólizas, en un solo lugar.
+                    ¿Qué deseas hacer hoy?
+                </p>
+
+            </div>
+
+            <div class="estado-sesion">
+                <span class="punto-verde"></span>
+                Sesión activa
+            </div>
+
+        </section>
+
+
+        <!-- TARJETAS DE GESTIÓN -->
+        <section class="contenedor-tarjetas">
+
+
+            <!-- TARJETA DE CLIENTES -->
+            <article class="tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <div class="icono-clientes">
+                        <span>♙</span>
+                    </div>
+
+                    <span class="categoria">CLIENTES</span>
+
+                </div>
+
+                <div class="tarjeta-contenido">
+
+                    <h2>Gestión de Cliente</h2>
+
+                    <p>
+                        Registra nuevos clientes o actualiza su
+                        información para mantener sus datos
+                        siempre al día.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-botones">
+
+                    <a href="/cliente/nuevo" class="boton">
+                        Alta de Cliente
+                    </a>
+
+                    <a href="/cliente/modificar" class="boton">
+                        Modificar Cliente
+                    </a>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- TARJETA DE PÓLIZAS -->
+            <article class="tarjeta">
+
+                <div class="tarjeta-encabezado">
+
+                    <div class="icono-polizas">
+                        <span>♢</span>
+                    </div>
+
+                    <span class="categoria">PÓLIZAS</span>
+
+                </div>
+
+                <div class="tarjeta-contenido">
+
+                    <h2>Gestión de Pólizas</h2>
+
+                    <p>
+                        Administra la protección de tus clientes.
+                        Registra pólizas y consulta todos sus detalles.
+                    </p>
+
+                </div>
+
+                <div class="tarjeta-botones">
+
+                    <a href="/poliza/nueva" class="boton">
+                        Registrar Nueva Póliza
+                    </a>
+
+                    <a href="/polizas" class="boton">
+                        Consultar mis Pólizas
+                    </a>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- MENSAJE INFORMATIVO -->
+        <section class="mensaje-seguridad">
+
+            <div class="icono-seguridad">
+                <span>♧</span>
+            </div>
+
+            <div class="mensaje-texto">
+
+                <h3>Una gestión clara, una mejor protección</h3>
+
+                <p>
+                    Mantén actualizados los datos de tus clientes
+                    y los beneficiarios de cada póliza.
+                </p>
+
+            </div>
+
+            <span class="texto-seguridad">
+                Espacio de trabajo seguro
+            </span>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="pie-pagina">
+
+        <span>Axolot Policy · Gestión de seguros</span>
+
+        <div class="estado-sistema">
+            <span class="punto-verde"></span>
+            Estado del Sistema Dueño: Conectado
+        </div>
+
+    </footer>
+
+</body>
+
+</html>
