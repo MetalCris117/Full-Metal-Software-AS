@@ -66,12 +66,16 @@ public class ClienteController {
 
         RestClient clienteRest = RestClient.create();
 
-        // Convertir la fecha al formato de texto
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-        String fecha = formatoFecha.format(nuevoCliente.getFechaNacimiento());
+        // Valida la nulidad y fijar zona horaria UTC para evitar el desfase de 1 día
+        String fecha = "";
+        if (nuevoCliente.getFechaNacimiento() != null) {
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+            formatoFecha.setTimeZone(TimeZone.getTimeZone("UTC"));
+            fecha = formatoFecha.format(nuevoCliente.getFechaNacimiento());
+        }
 
-        // Construir la URL con los atributos del cliente
-        URI direccion = UriComponentsBuilder
+        // Construye la URL
+        UriComponentsBuilder builder = UriComponentsBuilder
                 .fromUriString("http://nachintoch.mx:8080")
                 .pathSegment(
                         "cliente",
@@ -79,22 +83,21 @@ public class ClienteController {
                         nuevoCliente.getDireccion(),
                         fecha,
                         nuevoCliente.getNombres(),
-                        nuevoCliente.getPrimerApellido(),
-                        nuevoCliente.getSegundoApellido() == null
-                                ? "null"
-                                : nuevoCliente.getSegundoApellido()
-                )
-                .build()
-                .encode()
-                .toUri();
+                        nuevoCliente.getPrimerApellido()
+                );
+
+        // Agregar el segundo apellido solo si existe y no esta en blanco
+        if (nuevoCliente.getSegundoApellido() != null && !nuevoCliente.getSegundoApellido().isBlank()) {
+            builder.pathSegment(nuevoCliente.getSegundoApellido());
+        }
+
+        URI direccion = builder.build().encode().toUri();
 
         // Enviar petición POST al sistema dueño
-        ClienteAsegurado respuesta = clienteRest.post()
+        return clienteRest.post()
                 .uri(direccion)
                 .retrieve()
                 .body(ClienteAsegurado.class);
-
-        return respuesta;
     }
 
     //ERIK R5 y R8 - NRM-MC
