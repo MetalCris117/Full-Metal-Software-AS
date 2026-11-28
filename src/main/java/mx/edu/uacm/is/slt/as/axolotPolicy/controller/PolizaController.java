@@ -62,6 +62,7 @@ public class PolizaController {
         }
 
         /**
+         * brayan
          * Realiza una peticion GET al sistema dueño
          * para obtener las polizas de un beneficiario
          * 
@@ -192,6 +193,7 @@ public class PolizaController {
         }
 
         /**
+         * brayan
          * Realiza una peticion DELETE al sistema dueño
          * para borrar la poliza con la clave dada.
          * Antes de borrar revisa que la poliza exista.

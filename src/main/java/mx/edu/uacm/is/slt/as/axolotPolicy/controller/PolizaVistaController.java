@@ -16,7 +16,7 @@ import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.ClienteAsegurado;
  * PEREZ NAVA BRAYAN
  * Controlador Web MVC para la vista Formulario poliza..
  * Ligado a:
- * - Vistas: polizas/formulario.html y componentes/notificacion.html
+ * - Vistas: polizas/registro.html y componentes/notificacion.html
  * - Casos de Uso: NRM-AP, NRM-MP, EX-CNR y EX-DND
  */
 @Controller
@@ -28,7 +28,7 @@ public class PolizaVistaController {
     @GetMapping("/poliza/nueva")
     public String mostrarFormularioAlta(Model model) {
         model.addAttribute("modoEdicion", false);
-        return "polizas/formulario";
+        return "polizas/registro";
     }
 
     // Procesa el formulario de Alta de Poliza
