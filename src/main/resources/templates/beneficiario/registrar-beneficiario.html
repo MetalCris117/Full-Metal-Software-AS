@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Nuevo Beneficiario - Axolotl Policy</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hoja de estilos en static/css/ -->
+    <link rel="stylesheet" th:href="@{/css/styleBeneficiario.css}">
+</head>
+
+<body>
+
+    <!-- Barra Superior -->
+    <header class="navbar-axolotl d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <a href="/polizas" id="btnVolverSuperior" class="btn btn-back">
+                <i class="bi bi-arrow-left me-1"></i> Regresar a la Póliza
+            </a>
+            <div class="vr text-muted opacity-25 d-none d-sm-block" style="height: 24px;"></div>
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <span class="brand-logo">
+                    <i class="bi bi-shield-check"></i>
+                </span>
+                <span class="brand-title">Axolotl Policy</span>
+            </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-muted small d-none d-md-inline">Cliente asegurado</span>
+            <a href="/" class="btn-logout text-decoration-none" title="Cerrar sesión">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5" style="max-width: 880px;">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb breadcrumb-custom mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+                <li class="breadcrumb-item"><a href="/polizas">Mis pólizas</a></li>
+                <li class="breadcrumb-item"><a href="/polizas" id="breadcrumbPoliza">Gestión de Póliza</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Alta de Beneficiario</li>
+            </ol>
+        </nav>
+
+        <!-- Encabezado de página -->
+        <div class="mb-4">
+            <h1 class="h3 fw-bold mb-1" style="color: #1E293B;">Registrar Nuevo Beneficiario</h1>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">
+                Ingresa los datos del beneficiario y el porcentaje de participación para asignarlo a tu póliza.
+            </p>
+        </div>
+
+        <!-- Contenedor de Alertas (Validación local, EX-BYR y Confirmación Paso 4) -->
+        <div id="alertaResultado" class="alert d-none rounded-3 mb-4" role="alert"></div>
+
+        <!-- Tarjeta del Formulario -->
+        <div class="card-axolotl">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pb-3 mb-4 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="icon-badge-blue">
+                        <i class="bi bi-person-plus"></i>
+                    </span>
+                    <div>
+                        <h2 class="h6 fw-bold mb-0">Datos del Beneficiario</h2>
+                        <small class="text-muted">Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
+                    </div>
+                </div>
+                <span id="badgeDisponible" class="badge rounded-pill px-3 py-2 badge-axolotl-pink">
+                    Participación máx. 100%
+                </span>
+            </div>
+
+            <form id="formBeneficiario" novalidate>
+                <div class="row g-3">
+
+                    <!-- Clave de Póliza (UUID) -->
+                    <div class="col-md-8">
+                        <label for="clavePoliza" class="form-label">
+                            Clave de Póliza Seleccionada (UUID) <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control font-monospace" id="clavePoliza" required>
+                        <div class="form-text">Póliza seleccionada en la gestión de pólizas.</div>
+                    </div>
+
+                    <!-- Porcentaje de Participación -->
+                    <div class="col-md-4">
+                        <label for="porcentaje" class="form-label">
+                            Porcentaje de Beneficio (%) <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="porcentaje" min="1" max="100" required>
+                            <span class="input-group-text bg-light text-muted fw-semibold">%</span>
+                        </div>
+                        <div class="form-text" id="textoAyudaPorcentaje">Valor entero entre 1 y 100.</div>
+                    </div>
+
+                    <!-- Nombres -->
+                    <div class="col-md-6">
+                        <label for="nombres" class="form-label">
+                            Nombre(s) <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="nombres" required>
+                    </div>
+
+                    <!-- Fecha de Nacimiento -->
+                    <div class="col-md-6">
+                        <label for="fechaNacimiento" class="form-label">
+                            Fecha de Nacimiento <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control" id="fechaNacimiento" required>
+                    </div>
+
+                    <!-- Primer Apellido -->
+                    <div class="col-md-6">
+                        <label for="primerApellido" class="form-label">
+                            Primer Apellido <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="primerApellido" required>
+                    </div>
+
+                    <!-- Segundo Apellido (Opcional) -->
+                    <div class="col-md-6">
+                        <label for="segundoApellido" class="form-label">
+                            Segundo Apellido <span class="text-muted fw-normal">(Opcional)</span>
+                        </label>
+                        <input type="text" class="form-control" id="segundoApellido" >
+                    </div>
+
+                </div>
+
+                <!-- Botones de acción -->
+                <div
+                    class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 pt-4 mt-4 border-top">
+                    <span class="text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> La suma de todos los beneficiarios de la póliza no puede
+                        ser mayor al 100%.
+                    </span>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="/polizas" id="btnCancelar" class="btn btn-axolotl-secondary">
+                            Cancelar
+                        </a>
+                        <button type="submit" id="btnGuardar" class="btn btn-axolotl-primary">
+                            <i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-axolotl d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+        <div>Axolotl Policy · Gestión de seguros</div>
+        <div>
+            <span class="status-dot"></span> Estado del Sistema Dueño: Conectado
+        </div>
+    </footer>
+
+    <!-- Lógica conectada a BeneficiarioController y notificacion.html -->
+    <script>
+        const URL_ERROR_SISTEMA_DUENO = '/error-sistema-dueno';
+        const URL_REGISTRO_EXITOSO = '/beneficiario-registrado';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const claveParam = params.get('clave_poliza') || params.get('clavePoliza');
+
+            if (claveParam) {
+                const clave = claveParam.trim();
+                const inputClave = document.getElementById('clavePoliza');
+                inputClave.value = clave;
+                inputClave.readOnly = true;
+                inputClave.classList.add('bg-light');
+
+                const urlPoliza = `/poliza/${encodeURIComponent(clave)}`;
+                document.getElementById('btnVolverSuperior').href = urlPoliza;
+                document.getElementById('btnCancelar').href = urlPoliza;
+                const breadcrumb = document.getElementById('breadcrumbPoliza');
+                breadcrumb.href = urlPoliza;
+                breadcrumb.textContent = `Póliza ${clave.substring(0, 8)}...`;
+            }
+        });
+
+        document.getElementById('formBeneficiario').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const alerta = document.getElementById('alertaResultado');
+            const btnGuardar = document.getElementById('btnGuardar');
+
+            const fechaNacimiento = document.getElementById('fechaNacimiento').value.trim();
+            const clavePoliza = document.getElementById('clavePoliza').value.trim();
+            const porcentaje = document.getElementById('porcentaje').value.trim();
+            const nombres = document.getElementById('nombres').value.trim();
+            const primerApellido = document.getElementById('primerApellido').value.trim();
+            const segundoApellido = document.getElementById('segundoApellido').value.trim();
+
+            if (!fechaNacimiento || !clavePoliza || !porcentaje || !nombres || !primerApellido) {
+                mostrarAlerta('warning', '<i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Datos incompletos:</strong> Completa todos los campos obligatorios marcados con *.');
+                return;
+            }
+
+            const pctNum = parseInt(porcentaje, 10);
+            if (isNaN(pctNum) || pctNum < 1 || pctNum > 100) {
+                mostrarAlerta('warning', '<i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Porcentaje inválido:</strong> El porcentaje debe ser un número entero entre 1% y 100%.');
+                return;
+            }
+
+            let endpoint = `/beneficiario/${encodeURIComponent(fechaNacimiento)}/${encodeURIComponent(clavePoliza)}/${encodeURIComponent(pctNum)}/${encodeURIComponent(nombres)}/${encodeURIComponent(primerApellido)}`;
+            if (segundoApellido !== '') {
+                endpoint += `/${encodeURIComponent(segundoApellido)}`;
+            }
+
+            btnGuardar.disabled = true;
+            btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+            alerta.classList.add('d-none');
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                // Redirige a notificacion.html SOLO cuando el Sistema Dueño está realmente caído (503)
+                if (response.status === 503) {
+                    window.location.href = `${URL_ERROR_SISTEMA_DUENO}?clavePoliza=${encodeURIComponent(clavePoliza)}`;
+                    return;
+                }
+
+                const data = await response.json().catch(() => ({}));
+
+                // Cualquier rechazo (póliza inválida, duplicado o porcentaje excedido) se muestra en esta misma vista
+                if (!response.ok) {
+                    const textoError = data.mensaje || 'Póliza inválida: verifica que la clave de póliza exista e inténtalo de nuevo.';
+                    const icono = response.status === 409 ? 'bi-person-x-fill' : 'bi-exclamation-triangle-fill';
+                    mostrarAlerta(response.status === 409 ? 'danger' : 'warning', `<i class="bi ${icono} me-2"></i>${textoError}`);
+                    return;
+                }
+
+                // Registro exitoso -> redirige a notificacion.html
+                const nombreCompleto = `${nombres} ${primerApellido} ${segundoApellido}`.trim();
+                window.location.href = `${URL_REGISTRO_EXITOSO}?nombre=${encodeURIComponent(nombreCompleto)}&clavePoliza=${encodeURIComponent(clavePoliza)}`;
+
+            } catch (error) {
+                window.location.href = `${URL_ERROR_SISTEMA_DUENO}?clavePoliza=${encodeURIComponent(clavePoliza)}`;
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
+            }
+        });
+
+        function mostrarAlerta(tipo, mensaje) {
+            const alerta = document.getElementById('alertaResultado');
+            alerta.className = `alert alert-${tipo} rounded-3 mb-4`;
+            alerta.innerHTML = mensaje;
+            alerta.classList.remove('d-none');
+            alerta.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+
+</html>
