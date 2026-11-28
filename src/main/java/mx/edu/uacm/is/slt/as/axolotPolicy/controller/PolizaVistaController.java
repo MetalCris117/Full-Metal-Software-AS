@@ -28,10 +28,9 @@ public class PolizaVistaController {
 
     //Abre la interfaz que muestra las polizas disponibles del sitema dueño
     @GetMapping("/listaPolizas")
-    public String getMethodName(@RequestParam(value = "query", required = false) String query, Model model) {
+    public String mostrarListadoPolizas(@RequestParam(value = "query", required = false) String query, Model model) {
 
         List<Poliza> polizas = new ArrayList<>();
-        boolean conectado = true;
 
         try {
             List<Poliza> resultado = polizaController.getAll();
@@ -39,7 +38,9 @@ public class PolizaVistaController {
                 polizas = resultado;
             }
         } catch (Exception e) {
-            conectado = false;
+            // si el sitema dueño no esta disponible se muestra una notificacion
+            cargarErrorSistemaNoDisponible(model, "/listaPolizas");
+            return "componentes/notificacion";
         }
 
         if (query != null && !query.isBlank()) {
@@ -51,7 +52,7 @@ public class PolizaVistaController {
                         .filter(p -> convertirTipo(p.getTipo()).equals(filtro))
                         .toList();
             } else {
-                // busca por clave o descripcion o currp
+                // busca por clave o descripcion o curp
                 polizas = polizas.stream()
                         .filter(p -> (p.getClave() != null && normalizar(p.getClave().toString()).contains(filtro))
                                 || normalizar(p.getDescripcion()).contains(filtro)
@@ -62,7 +63,7 @@ public class PolizaVistaController {
 
         model.addAttribute("polizas", polizas);
         model.addAttribute("query", query);
-        model.addAttribute("conectado", conectado);
+        model.addAttribute("conectado", true);
 
         return "polizas/listadoPolizas";
     }
