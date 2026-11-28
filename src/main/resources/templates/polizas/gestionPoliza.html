@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Axolotl Policy - Gestión de Póliza: ' + ${poliza.clave}">
+        Axolotl Policy - Gestión de Póliza
+    </title>
+    <link rel="stylesheet" href="../../static/css/polizasStyle.css" th:href="@{/css/polizasStyle.css}">
+    <link rel="stylesheet" href="../../static/css/gestion-poliza.css" th:href="@{/css/gestion-poliza.css}">
+</head>
+
+<body>
+
+    <!-- Encabezado homologado con listadoPolizas.html -->
+    <header class="encabezado">
+        <div class="encabezado-izq">
+            <a th:href="@{/listaPolizas}" class="boton-volver">&larr; Regresar a la Lista</a>
+
+            <span class="separador-vertical"></span>
+
+            <a th:href="@{/}" class="logo">
+                <div class="logo-icono">
+                    <span>✿</span>
+                </div>
+                <h2>Axolotl Policy</h2>
+            </a>
+        </div>
+
+        <div class="opciones-usuario">
+            <span class="portal">Portal de intermediarios</span>
+            <a th:href="@{/}" class="boton-salir" title="Volver al inicio">
+                <span>⇥</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="contenido-polizas">
+
+        <!-- Migas de pan (reutiliza .textoPequeño de polizasStyle.css) -->
+        <nav class="textoPequeño" aria-label="Breadcrumb">
+            <a th:href="@{/}">Inicio</a>
+            <span>&gt;</span>
+            <a th:href="@{/listaPolizas}">Mis pólizas</a>
+            <span>&gt;</span>
+            <strong th:text="'Póliza ' + ${poliza.clave}">Póliza 001</strong>
+        </nav>
+
+        <!-- Título y subtítulo de la vista -->
+        <div class="cabecera-gestion">
+            <h1 th:with="tipoTexto=${poliza.tipo == 0 ? 'Auto' : (poliza.tipo == 1 ? 'Vida' : 'Médico')}"
+                th:text="'Gestión de Póliza: ' + ${poliza.clave} + ' (' + ${tipoTexto} + ')'">
+                Gestión de Póliza: 001 (Auto)
+            </h1>
+            <p>Consulta la información de la póliza y administra sus beneficiarios.</p>
+        </div>
+
+        <!-- Tarjeta 1: Información de la póliza -->
+        <section class="tarjeta-gestion tarjeta-poliza">
+            <div class="tarjeta-gestion-header">
+                <div class="titulo-con-icono">
+                    <div class="icono-poliza-tipo" th:switch="${poliza.tipo}">
+                        <!-- Icono Auto -->
+                        <svg th:case="0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"></path>
+                            <circle cx="6.5" cy="16.5" r="2.5"></circle>
+                            <circle cx="16.5" cy="16.5" r="2.5"></circle>
+                        </svg>
+                        <!-- Icono Vida -->
+                        <svg th:case="1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <!-- Icono Médico -->
+                        <svg th:case="*" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h2>Información de la póliza</h2>
+                </div>
+
+                <div class="acciones-poliza">
+                    <a th:href="@{/poliza/editar(clave=${poliza.clave})}" class="boton-editar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Editar Datos de Póliza
+                    </a>
+
+                    <form th:action="@{/polizas/eliminar/{clave}(clave=${poliza.clave})}" method="post"
+                          onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta póliza?');">
+                        <button type="submit" class="boton-eliminar">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Eliminar Póliza
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="linea-divisoria">
+
+            <div class="grid-datos-poliza">
+                <div class="campo-dato">
+                    <span class="campo-etiqueta">Clave de póliza</span>
+                    <span class="campo-valor campo-clave" th:text="${poliza.clave}">001</span>
+                </div>
+
+                <div class="campo-dato">
+                    <span class="campo-etiqueta">Tipo de seguro</span>
+                    <span class="campo-valor" th:switch="${poliza.tipo}">
+                        <span th:case="0">Auto</span>
+                        <span th:case="1">Vida</span>
+                        <span th:case="2">Médico</span>
+                    </span>
+                </div>
+
+                <div class="campo-dato">
+                    <span class="campo-etiqueta">Monto asegurado</span>
+                    <span class="campo-valor"
+                          th:text="'$' + ${#numbers.formatDecimal(poliza.monto, 1, 'COMMA', 2, 'POINT')} + ' MXN'">
+                        $350,000.00 MXN
+                    </span>
+                </div>
+
+                <div class="campo-dato">
+                    <span class="campo-etiqueta">Descripción</span>
+                    <span class="campo-valor" th:text="${poliza.descripcion}">
+                        Cobertura amplia - Mazda 3, modelo 2024
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Beneficiarios Asignados -->
+        <section class="seccion-beneficiarios">
+            <div class="cabecera-beneficiarios">
+                <div>
+                    <div class="titulo-contador">
+                        <h2>Beneficiarios Asignados</h2>
+                        <span class="badge-total"
+                              th:text="${beneficiarios != null ? #lists.size(beneficiarios) : 0}">2</span>
+                    </div>
+                    <p>Personas designadas para recibir la protección de esta póliza.</p>
+                </div>
+
+                <div class="pildora-porcentaje"
+                     th:classappend="${porcentajeTotal != null and porcentajeTotal == 100} ? 'porcentaje-completo' : 'porcentaje-incompleto'">
+                    <span class="punto-pildora"></span>
+                    <span th:text="${(porcentajeTotal != null ? porcentajeTotal : 0) + '% asignado'}">100% asignado</span>
+                </div>
+            </div>
+
+            <!-- Cuadrícula de beneficiarios -->
+            <div class="grid-beneficiarios" th:if="${beneficiarios != null and !#lists.isEmpty(beneficiarios)}">
+                <article class="tarjeta-gestion tarjeta-beneficiario" th:each="b, stat : ${beneficiarios}">
+                    <div class="beneficiario-info-superior">
+                        <div class="beneficiario-perfil">
+                            <div class="avatar-iniciales"
+                                 th:classappend="${stat.odd} ? 'avatar-rosa' : 'avatar-azul'"
+                                 th:text="${#strings.toUpperCase((b.id.nombres != null and !#strings.isEmpty(b.id.nombres) ? #strings.substring(b.id.nombres,0,1) : '') + (b.id.primerApellido != null and !#strings.isEmpty(b.id.primerApellido) ? #strings.substring(b.id.primerApellido,0,1) : ''))}">
+                                ML
+                            </div>
+                            <div>
+                                <h3 class="beneficiario-nombre"
+                                    th:text="${b.id.nombres + ' ' + b.id.primerApellido + (b.id.segundoApellido != null ? ' ' + b.id.segundoApellido : '')}">
+                                    María Fernanda López
+                                </h3>
+                                <span class="beneficiario-fecha"
+                                      th:text="'Nacimiento: ' + ${b.id.fechaNacimiento}">
+                                    Nacimiento: 1995-05-15
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="beneficiario-participacion">
+                            <span class="valor-porcentaje" th:text="${b.porcentaje} + '%'">50%</span>
+                            <span class="texto-participacion">Participación</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Mensaje si no hay beneficiarios -->
+            <div class="tarjeta-gestion estado-sin-beneficiarios"
+                 th:if="${beneficiarios == null or #lists.isEmpty(beneficiarios)}">
+                <p>No hay beneficiarios asignados a esta póliza todavía.</p>
+            </div>
+
+            <!-- Botón de acción inferior -->
+            <div class="barra-accion-inferior">
+                <a th:href="@{/registrar-beneficiario(clave_poliza=${poliza.clave})}" class="boton-registrar-beneficiario">
+                    + Registrar Nuevo Beneficiario
+                </a>
+                <span class="texto-ayuda-porcentaje">La participación total debe sumar 100%.</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pie de página homologado con listadoPolizas.html -->
+    <footer class="pie-pagina">
+        <span>Axolotl Policy · Gestión de seguros</span>
+        <div class="estado-sistema"
+             th:style="${conectado != null and !conectado} ? 'color: #dc2626;' : ''">
+            <span class="punto-verde"
+                  th:style="${conectado != null and !conectado} ? 'background-color: #dc2626;' : ''"></span>
+            <span th:text="${conectado != null and !conectado} ? 'Estado del Sistema Dueño: Sin conexión' : 'Estado del Sistema Dueño: Conectado'">
+                Estado del Sistema Dueño: Conectado
+            </span>
+        </div>
+    </footer>
+
+</body>
+</html>
