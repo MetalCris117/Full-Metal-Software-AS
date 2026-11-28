@@ -1,0 +1,202 @@
+:root {
+    --axolotl-pink: #D81B60;
+    --axolotl-pink-hover: #AD1457;
+    --axolotl-pink-light: #FCE4EC;
+    --bg-canvas: #F8F9FA;
+    --text-dark: #212529;
+    --text-muted: #6C757D;
+    --border-subtle: #E9ECEF;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-canvas);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar superior */
+.navbar-axolotl {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.85rem 2rem;
+}
+
+.btn-back {
+    background-color: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    padding: 0.45rem 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+    background-color: #F1F3F5;
+    color: var(--text-dark);
+}
+
+.brand-logo {
+    background-color: var(--axolotl-pink);
+    color: #FFFFFF;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.brand-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1E293B;
+    letter-spacing: -0.02em;
+}
+
+.btn-logout {
+    background-color: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    color: var(--text-muted);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Breadcrumbs */
+.breadcrumb-custom {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+}
+
+.breadcrumb-custom a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.breadcrumb-custom a:hover {
+    color: var(--axolotl-pink);
+}
+
+.breadcrumb-custom .active {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Tarjeta principal */
+.card-axolotl {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    padding: 2rem;
+}
+
+.icon-badge-blue {
+    background-color: #E7F1FF;
+    color: #2563EB;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+/* Inputs y etiquetas */
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.4rem;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.925rem;
+    color: var(--text-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--axolotl-pink);
+    box-shadow: 0 0 0 0.2rem rgba(216, 27, 96, 0.15);
+}
+
+.form-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* Botón principal Rosa D81B60 */
+.btn-axolotl-primary {
+    background-color: var(--axolotl-pink);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.925rem;
+    border-radius: 8px;
+    padding: 0.65rem 1.4rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-axolotl-primary:hover {
+    background-color: var(--axolotl-pink-hover);
+    color: #FFFFFF;
+}
+
+.btn-axolotl-primary:disabled {
+    background-color: #E57399;
+}
+
+.btn-axolotl-secondary {
+    background-color: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    color: #475569;
+    font-weight: 500;
+    font-size: 0.925rem;
+    border-radius: 8px;
+    padding: 0.65rem 1.25rem;
+}
+
+.btn-axolotl-secondary:hover {
+    background-color: #F1F3F5;
+    color: var(--text-dark);
+}
+
+/* Badge de porcentaje */
+.badge-axolotl-pink {
+    background-color: var(--axolotl-pink-light);
+    color: var(--axolotl-pink);
+    font-weight: 600;
+}
+
+/* Footer */
+.footer-axolotl {
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--border-subtle);
+    padding: 1rem 2rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: auto;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #16A34A;
+    margin-right: 6px;
+}
