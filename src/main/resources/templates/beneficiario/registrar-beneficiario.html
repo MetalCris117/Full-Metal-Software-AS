@@ -20,7 +20,7 @@
     <!-- Barra Superior -->
     <header class="navbar-axolotl d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-3">
-            <a href="/polizas" id="btnVolverSuperior" class="btn btn-back">
+            <a href="/listaPolizas" id="btnVolverSuperior" class="btn btn-back">
                 <i class="bi bi-arrow-left me-1"></i> Regresar a la Póliza
             </a>
             <div class="vr text-muted opacity-25 d-none d-sm-block" style="height: 24px;"></div>
@@ -47,8 +47,8 @@
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb breadcrumb-custom mb-0">
                 <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
-                <li class="breadcrumb-item"><a href="/polizas">Mis pólizas</a></li>
-                <li class="breadcrumb-item"><a href="/polizas" id="breadcrumbPoliza">Gestión de Póliza</a></li>
+                <li class="breadcrumb-item"><a href="/listaPolizas">Mis pólizas</a></li>
+                <li class="breadcrumb-item"><a href="/listaPolizas" id="breadcrumbPoliza">Gestión de Póliza</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Alta de Beneficiario</li>
             </ol>
         </nav>
@@ -148,7 +148,7 @@
                         ser mayor al 100%.
                     </span>
                     <div class="d-flex gap-2 justify-content-end">
-                        <a href="/polizas" id="btnCancelar" class="btn btn-axolotl-secondary">
+                        <a href="/listaPolizas" id="btnCancelar" class="btn btn-axolotl-secondary">
                             Cancelar
                         </a>
                         <button type="submit" id="btnGuardar" class="btn btn-axolotl-primary">
@@ -184,7 +184,7 @@
                 inputClave.readOnly = true;
                 inputClave.classList.add('bg-light');
 
-                const urlPoliza = `/poliza/${encodeURIComponent(clave)}`;
+                const urlPoliza = `/polizas/gestionar/${encodeURIComponent(clave)}`;
                 document.getElementById('btnVolverSuperior').href = urlPoliza;
                 document.getElementById('btnCancelar').href = urlPoliza;
                 const breadcrumb = document.getElementById('breadcrumbPoliza');

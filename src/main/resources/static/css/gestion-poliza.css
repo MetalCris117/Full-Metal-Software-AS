@@ -1,0 +1,343 @@
+.separador-vertical {
+    width: 1px;
+    height: 24px;
+    background-color: #e2e8f0;
+}
+
+/* Cabecera de página */
+.cabecera-gestion {
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.cabecera-gestion h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+    word-break: break-word;
+}
+
+.cabecera-gestion p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Tarjetas base */
+.tarjeta-gestion {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.linea-divisoria {
+    border: none;
+    border-top: 1px solid #f1f5f9;
+    margin: 18px 0;
+}
+
+/* Tarjeta de información de la póliza */
+.tarjeta-poliza {
+    margin-bottom: 32px;
+}
+
+.tarjeta-gestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.titulo-con-icono {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icono-poliza-tipo {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titulo-con-icono h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.acciones-poliza {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.boton-editar,
+.boton-eliminar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.boton-editar {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+.boton-editar:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+.boton-eliminar {
+    background-color: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #e11d48;
+}
+
+.boton-eliminar:hover {
+    background-color: #e11d48;
+    border-color: #e11d48;
+    color: #ffffff;
+}
+
+.grid-datos-poliza {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.campo-dato {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.campo-etiqueta {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.campo-valor {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+}
+
+.campo-clave {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+}
+
+/* Sección Beneficiarios Asignados */
+.cabecera-beneficiarios {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.titulo-contador {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.titulo-contador h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.badge-total {
+    background-color: #e2e8f0;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 999px;
+}
+
+.cabecera-beneficiarios p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.pildora-porcentaje {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.porcentaje-completo {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.porcentaje-incompleto {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.punto-pildora {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+/* Cuadrícula de tarjetas de beneficiarios */
+.grid-beneficiarios {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.tarjeta-beneficiario {
+    padding: 20px 22px;
+}
+
+.beneficiario-info-superior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.beneficiario-perfil {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatar-iniciales {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.avatar-rosa {
+    background-color: #fff1f2;
+    color: #e11d48;
+}
+
+.avatar-azul {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.beneficiario-nombre {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 3px;
+}
+
+.beneficiario-fecha {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.beneficiario-participacion {
+    text-align: right;
+}
+
+.valor-porcentaje {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.texto-participacion {
+    font-size: 11px;
+    color: #64748b;
+}
+
+.link-detalle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #e11d48;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link-detalle:hover {
+    color: #be123c;
+}
+
+.estado-sin-beneficiarios {
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    padding: 28px;
+}
+
+/* Acciones inferiores */
+.barra-accion-inferior {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.boton-registrar-beneficiario {
+    background-color: #e11d48;
+    color: #ffffff;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.boton-registrar-beneficiario:hover {
+    background-color: #be123c;
+}
+
+.texto-ayuda-porcentaje {
+    font-size: 12px;
+    color: #64748b;
+}
+
+@media (max-width: 850px) {
+    .grid-datos-poliza,
+    .grid-beneficiarios {
+        grid-template-columns: 1fr;
+    }
+}
