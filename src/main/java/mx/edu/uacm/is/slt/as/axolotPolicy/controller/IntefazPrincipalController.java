@@ -16,9 +16,4 @@ public class IntefazPrincipalController {
     public String mostrarPrincipal() {
         return "inicio"; //le dice a sprint boot que busque el archivo index.html en la carpeta templates
     }
-
-    @GetMapping("/registrar-beneficiario")
-        public String mostrarFormularioBeneficiario() {
-        return "registrar-beneficiario"; // Busca registrar-beneficiario.html en templates/
-    }
 }

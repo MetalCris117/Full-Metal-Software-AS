@@ -12,7 +12,7 @@
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Hoja de estilos en static/css/ -->
-    <link rel="stylesheet" href="/css/styleBeneficiario.css">
+    <link rel="stylesheet" th:href="@{/css/styleBeneficiario.css}">
 </head>
 
 <body>
@@ -90,8 +90,7 @@
                         <label for="clavePoliza" class="form-label">
                             Clave de Póliza Seleccionada (UUID) <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control font-monospace" id="clavePoliza"
-                            placeholder="Ej. d0511665-4910-413f-a7ee-a475d1dd9e61" required>
+                        <input type="text" class="form-control font-monospace" id="clavePoliza" required>
                         <div class="form-text">Póliza seleccionada en la gestión de pólizas.</div>
                     </div>
 
@@ -101,8 +100,7 @@
                             Porcentaje de Beneficio (%) <span class="text-danger">*</span>
                         </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="porcentaje" min="1" max="100" placeholder="50"
-                                required>
+                            <input type="number" class="form-control" id="porcentaje" min="1" max="100" required>
                             <span class="input-group-text bg-light text-muted fw-semibold">%</span>
                         </div>
                         <div class="form-text" id="textoAyudaPorcentaje">Valor entero entre 1 y 100.</div>
@@ -113,7 +111,7 @@
                         <label for="nombres" class="form-label">
                             Nombre(s) <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control" id="nombres" placeholder="Ej. María Fernanda" required>
+                        <input type="text" class="form-control" id="nombres" required>
                     </div>
 
                     <!-- Fecha de Nacimiento -->
@@ -129,7 +127,7 @@
                         <label for="primerApellido" class="form-label">
                             Primer Apellido <span class="text-danger">*</span>
                         </label>
-                        <input type="text" class="form-control" id="primerApellido" placeholder="Ej. López" required>
+                        <input type="text" class="form-control" id="primerApellido" required>
                     </div>
 
                     <!-- Segundo Apellido (Opcional) -->
@@ -137,7 +135,7 @@
                         <label for="segundoApellido" class="form-label">
                             Segundo Apellido <span class="text-muted fw-normal">(Opcional)</span>
                         </label>
-                        <input type="text" class="form-control" id="segundoApellido" placeholder="Ej. Hernández">
+                        <input type="text" class="form-control" id="segundoApellido" >
                     </div>
 
                 </div>
@@ -170,119 +168,30 @@
         </div>
     </footer>
 
-    <!-- Lógica alineada al Caso de Uso NRM-AB "Alta de beneficiario" -->
+    <!-- Lógica conectada a BeneficiarioController y notificacion.html -->
     <script>
-        // Ruta a la vista dedicada para el flujo excepcional EX-DND (fallo/indisponibilidad del Sistema Dueño)
         const URL_ERROR_SISTEMA_DUENO = '/error-sistema-dueno';
+        const URL_REGISTRO_EXITOSO = '/beneficiario-registrado';
 
-        function redirigirErrorSistemaDueno() {
-            window.location.href = URL_ERROR_SISTEMA_DUENO;
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const claveParam = params.get('clave_poliza') || params.get('clavePoliza');
-            const inputClave = document.getElementById('clavePoliza');
 
             if (claveParam) {
-                inputClave.value = claveParam.trim();
+                const clave = claveParam.trim();
+                const inputClave = document.getElementById('clavePoliza');
+                inputClave.value = clave;
                 inputClave.readOnly = true;
                 inputClave.classList.add('bg-light');
-                configurarRutasRetorno(claveParam.trim());
-                await obtenerEstadoPolizaEnServidor(claveParam.trim());
-            } else {
-                inputClave.addEventListener('blur', async (e) => {
-                    const val = e.target.value.trim();
-                    if (val) {
-                        configurarRutasRetorno(val);
-                        await obtenerEstadoPolizaEnServidor(val);
-                    }
-                });
+
+                const urlPoliza = `/poliza/${encodeURIComponent(clave)}`;
+                document.getElementById('btnVolverSuperior').href = urlPoliza;
+                document.getElementById('btnCancelar').href = urlPoliza;
+                const breadcrumb = document.getElementById('breadcrumbPoliza');
+                breadcrumb.href = urlPoliza;
+                breadcrumb.textContent = `Póliza ${clave.substring(0, 8)}...`;
             }
         });
-
-        function configurarRutasRetorno(clavePoliza) {
-            const urlGestionPoliza = `/poliza/${encodeURIComponent(clavePoliza)}`;
-            document.getElementById('btnVolverSuperior').href = urlGestionPoliza;
-            document.getElementById('btnCancelar').href = urlGestionPoliza;
-            const breadcrumb = document.getElementById('breadcrumbPoliza');
-            breadcrumb.href = urlGestionPoliza;
-            breadcrumb.textContent = `Póliza ${clavePoliza.substring(0, 8)}...`;
-        }
-
-        /**
-         * Consulta obligatoria al servidor para obtener los beneficiarios reales de la póliza.
-         * Extrae los campos desde el objeto anidado "id" devuelto por Spring Boot.
-         * Si el Sistema Dueño no responde o falla (EX-DND), redirige inmediatamente a la vista de error.
-         */
-        async function obtenerEstadoPolizaEnServidor(clavePoliza) {
-            let resp;
-            try {
-                resp = await fetch('/beneficiarios', {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' },
-                    cache: 'no-store'
-                });
-            } catch (networkError) {
-                redirigirErrorSistemaDueno();
-                return null;
-            }
-
-            if (!resp.ok) {
-                redirigirErrorSistemaDueno();
-                return null;
-            }
-
-            const todos = await resp.json();
-            const lista = Array.isArray(todos) ? todos : [];
-
-            const beneficiariosPoliza = lista.filter(b => {
-                const datosId = b.id || b;
-                const claveItem = String(datosId.clavePoliza || datosId.clave_poliza || '').trim().toLowerCase();
-                return claveItem === clavePoliza.toLowerCase();
-            });
-
-            const porcentajeAsignado = beneficiariosPoliza.reduce((acc, b) => {
-                return acc + (Number(b.porcentaje) || 0);
-            }, 0);
-
-            const disponible = Math.max(0, 100 - porcentajeAsignado);
-
-            document.getElementById('badgeDisponible').textContent =
-                `Asignado: ${porcentajeAsignado}% · Disponible: ${disponible}%`;
-            document.getElementById('textoAyudaPorcentaje').textContent =
-                disponible > 0
-                    ? `Puedes asignar entre 1% y ${disponible}% restante.`
-                    : 'Esta póliza ya tiene el 100% asignado.';
-
-            return { beneficiariosPoliza, porcentajeAsignado, disponible };
-        }
-
-        function normalizarTexto(txt) {
-            return (txt || '')
-                .trim()
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '');
-        }
-
-        // Flujo Excepcional EX-BYR: verifica coincidencia de beneficiario en la misma póliza dentro de "id"
-        function existeBeneficiarioEnPoliza(beneficiariosPoliza, nombres, primerApellido, segundoApellido, fechaNacimiento) {
-            const nomNorm = normalizarTexto(nombres);
-            const ap1Norm = normalizarTexto(primerApellido);
-            const ap2Norm = normalizarTexto(segundoApellido);
-
-            return beneficiariosPoliza.some(b => {
-                const datosId = b.id || b;
-                const bNom = normalizarTexto(datosId.nombres);
-                const bAp1 = normalizarTexto(datosId.primerApellido || datosId.primer_apellido);
-                const bAp2 = normalizarTexto(datosId.segundoApellido || datosId.segundo_apellido);
-                const rawFecha = datosId.fechaNacimiento || datosId.fecha_nacimiento || '';
-                const bFecha = String(rawFecha).substring(0, 10);
-
-                return bNom === nomNorm && bAp1 === ap1Norm && bAp2 === ap2Norm && bFecha === fechaNacimiento;
-            });
-        }
 
         document.getElementById('formBeneficiario').addEventListener('submit', async function (event) {
             event.preventDefault();
@@ -297,7 +206,6 @@
             const primerApellido = document.getElementById('primerApellido').value.trim();
             const segundoApellido = document.getElementById('segundoApellido').value.trim();
 
-            // 1. Validación de campos requeridos (permanece en Paso 3)
             if (!fechaNacimiento || !clavePoliza || !porcentaje || !nombres || !primerApellido) {
                 mostrarAlerta('warning', '<i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Datos incompletos:</strong> Completa todos los campos obligatorios marcados con *.');
                 return;
@@ -309,82 +217,47 @@
                 return;
             }
 
-            btnGuardar.disabled = true;
-            btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Validando y guardando...';
-            alerta.classList.add('d-none');
-
-            // 2. Consulta síncrona en tiempo real de los beneficiarios de la póliza (si falla, redirige a EX-DND)
-            const estadoPoliza = await obtenerEstadoPolizaEnServidor(clavePoliza);
-            if (!estadoPoliza) return;
-
-            const { beneficiariosPoliza, porcentajeAsignado, disponible } = estadoPoliza;
-
-            // 3. Validar que la suma total de la póliza no exceda 100%
-            if (porcentajeAsignado + pctNum > 100) {
-                btnGuardar.disabled = false;
-                btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
-                mostrarAlerta('warning', `<i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Porcentaje excedido:</strong> La suma de los beneficiarios de esta póliza no puede ser mayor al 100%. Ya tiene <strong>${porcentajeAsignado}%</strong> asignado (disponible: <strong>${disponible}%</strong>).`);
-                return;
-            }
-
-            // 4. Flujo Excepcional EX-BYR: "El beneficiario ya está registrado" en esta póliza
-            if (existeBeneficiarioEnPoliza(beneficiariosPoliza, nombres, primerApellido, segundoApellido, fechaNacimiento)) {
-                btnGuardar.disabled = false;
-                btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
-                mostrarAlerta('danger', `<i class="bi bi-person-x-fill me-2"></i><strong>El beneficiario ya está registrado:</strong> <strong>${nombres} ${primerApellido} ${segundoApellido}</strong> ya figura como beneficiario en esta póliza. Un mismo beneficiario no puede registrarse más de una vez en la misma póliza.`);
-                return;
-            }
-
-            // 5. Envío POST al Sistema Intermediario -> Sistema Dueño
             let endpoint = `/beneficiario/${encodeURIComponent(fechaNacimiento)}/${encodeURIComponent(clavePoliza)}/${encodeURIComponent(pctNum)}/${encodeURIComponent(nombres)}/${encodeURIComponent(primerApellido)}`;
             if (segundoApellido !== '') {
                 endpoint += `/${encodeURIComponent(segundoApellido)}`;
             }
 
-            let response;
+            btnGuardar.disabled = true;
+            btnGuardar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+            alerta.classList.add('d-none');
+
             try {
-                response = await fetch(endpoint, {
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Accept': 'application/json' }
                 });
-            } catch (networkError) {
-                redirigirErrorSistemaDueno();
-                return;
-            }
 
-            if (!response.ok) {
-                if (response.status === 409) {
-                    btnGuardar.disabled = false;
-                    btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
-                    mostrarAlerta('danger', `<i class="bi bi-person-x-fill me-2"></i><strong>El beneficiario ya está registrado:</strong> Los datos coinciden con un registro existente en esta póliza.`);
+                // Redirige a notificacion.html SOLO cuando el Sistema Dueño está realmente caído (503)
+                if (response.status === 503) {
+                    window.location.href = `${URL_ERROR_SISTEMA_DUENO}?clavePoliza=${encodeURIComponent(clavePoliza)}`;
                     return;
                 }
-                // Cualquier error del Sistema Dueño (500, 502, 503, 504) redirige a la vista de error EX-DND
-                redirigirErrorSistemaDueno();
-                return;
+
+                const data = await response.json().catch(() => ({}));
+
+                // Cualquier rechazo (póliza inválida, duplicado o porcentaje excedido) se muestra en esta misma vista
+                if (!response.ok) {
+                    const textoError = data.mensaje || 'Póliza inválida: verifica que la clave de póliza exista e inténtalo de nuevo.';
+                    const icono = response.status === 409 ? 'bi-person-x-fill' : 'bi-exclamation-triangle-fill';
+                    mostrarAlerta(response.status === 409 ? 'danger' : 'warning', `<i class="bi ${icono} me-2"></i>${textoError}`);
+                    return;
+                }
+
+                // Registro exitoso -> redirige a notificacion.html
+                const nombreCompleto = `${nombres} ${primerApellido} ${segundoApellido}`.trim();
+                window.location.href = `${URL_REGISTRO_EXITOSO}?nombre=${encodeURIComponent(nombreCompleto)}&clavePoliza=${encodeURIComponent(clavePoliza)}`;
+
+            } catch (error) {
+                window.location.href = `${URL_ERROR_SISTEMA_DUENO}?clavePoliza=${encodeURIComponent(clavePoliza)}`;
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
             }
-
-            await response.json();
-            await obtenerEstadoPolizaEnServidor(clavePoliza);
-
-            const urlRetorno = `/poliza/${encodeURIComponent(clavePoliza)}`;
-            mostrarAlerta('success', `
-                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
-                    <div>
-                        <i class="bi bi-check-circle-fill me-2"></i><strong>Beneficiario registrado:</strong> <strong>${nombres} ${primerApellido}</strong> fue agregado exitosamente con el <strong>${pctNum}%</strong> de participación.
-                    </div>
-                    <a href="${urlRetorno}" class="btn btn-sm btn-success flex-shrink-0">Volver a la Póliza</a>
-                </div>
-            `);
-
-            document.getElementById('nombres').value = '';
-            document.getElementById('primerApellido').value = '';
-            document.getElementById('segundoApellido').value = '';
-            document.getElementById('fechaNacimiento').value = '';
-            document.getElementById('porcentaje').value = '';
-
-            btnGuardar.disabled = false;
-            btnGuardar.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Beneficiario';
         });
 
         function mostrarAlerta(tipo, mensaje) {
