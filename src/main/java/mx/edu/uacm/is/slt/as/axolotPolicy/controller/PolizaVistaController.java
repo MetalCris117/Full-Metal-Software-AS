@@ -1,5 +1,8 @@
 package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,77 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.ClienteAsegurado;
+import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
+
+@Controller
+public class PolizaVistaController {
+
+    private final PolizaController polizaController;
+    private static final String BASE_URL = "http://localhost:8081";
+
+    public PolizaVistaController(PolizaController polizaController) {
+        this.polizaController = polizaController;
+    }
+
+    //Abre la interfaz que muestra las polizas disponibles del sitema dueño
+    @GetMapping("/listaPolizas")
+    public String mostrarListadoPolizas(@RequestParam(value = "query", required = false) String query, Model model) {
+
+        List<Poliza> polizas = new ArrayList<>();
+
+        try {
+            List<Poliza> resultado = polizaController.getAll();
+            if (resultado != null) {
+                polizas = resultado;
+            }
+        } catch (Exception e) {
+            // si el sitema dueño no esta disponible se muestra una notificacion
+            cargarErrorSistemaNoDisponible(model, "/listaPolizas");
+            return "componentes/notificacion";
+        }
+
+        if (query != null && !query.isBlank()) {
+            String filtro = normalizar(query);
+
+            //buscamos por tipo de poliza primero
+            if (filtro.equals("auto") || filtro.equals("vida") || filtro.equals("medico")) {
+                polizas = polizas.stream()
+                        .filter(p -> convertirTipo(p.getTipo()).equals(filtro))
+                        .toList();
+            } else {
+                // busca por clave o descripcion o curp
+                polizas = polizas.stream()
+                        .filter(p -> (p.getClave() != null && normalizar(p.getClave().toString()).contains(filtro))
+                                || normalizar(p.getDescripcion()).contains(filtro)
+                                || normalizar(p.getCurp()).contains(filtro))
+                        .toList();
+            }
+        }
+
+        model.addAttribute("polizas", polizas);
+        model.addAttribute("query", query);
+        model.addAttribute("conectado", true);
+
+        return "polizas/listadoPolizas";
+    }
+
+    private String convertirTipo(int tipo) {
+        return switch (tipo) {
+            case 0 -> "auto";
+            case 1 -> "vida";
+            case 2 -> "medico";
+            default -> String.valueOf(tipo);
+        };
+    }
+
+    private String normalizar(String texto) {
+        if (texto == null) {
+            return "";
+        }
+        return Normalizer.normalize(texto.trim().toLowerCase(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+    }
+
 
 /**
  * PEREZ NAVA BRAYAN
@@ -19,10 +93,6 @@ import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.ClienteAsegurado;
  * - Vistas: polizas/formulario.html y componentes/notificacion.html
  * - Casos de Uso: NRM-AP, NRM-MP, EX-CNR y EX-DND
  */
-@Controller
-public class PolizaVistaController {
-
-    private static final String BASE_URL = "http://localhost:8081";
 
     // Abre el formulario vacio desde el boton "Registrar Nueva Poliza" de inicio.html
     @GetMapping("/poliza/nueva")
