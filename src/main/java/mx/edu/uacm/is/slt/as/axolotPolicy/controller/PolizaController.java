@@ -1,0 +1,305 @@
+package mx.edu.uacm.is.slt.as.axolotPolicy.controller;
+
+import java.util.List;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClient;
+import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+import java.util.ArrayList;
+import mx.edu.uacm.is.slt.as.axolotPolicy.modelo.Poliza;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@RestController
+public class PolizaController {
+
+        /**
+         * Realiza una peticion GET al sistema dueño
+         * para recuperar la lista de polizas
+         * la ruta http://localhost:8081/polizas muestra
+         * todas las polizas.
+         * 
+         * @return lista con todas las polizas registradas
+         */
+        @GetMapping("/polizas")
+        public List<Poliza> getAll() {
+                RestClient clienteRestPoliza = RestClient.create();
+
+                return clienteRestPoliza.get()
+                        .uri("http://nachintoch.mx:8080/polizas")
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        });
+
+        }
+
+        /**
+         * ERIK R4, R8 y R15 - PRM-GP / PRN-GP
+         * Realiza una peticion GET al sistema dueño
+         * para devolver todas las polizas del cliente con el CURP dado.
+         * Ruta: http://localhost:8081/polizas/cliente/{curp}
+         * 
+         * @param curp CURP del cliente asegurado
+         * @return lista de polizas asociadas al cliente con esa CURP
+         */
+        @GetMapping("/polizas/cliente/{curp}")
+        public List<Poliza> getPolizasPorCurp(@PathVariable String curp) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                return clienteRestPoliza.get()
+                        .uri("http://nachintoch.mx:8080/polizas/cliente/{curp}", curp)
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        });
+        }
+
+        /**
+         * Realiza una peticion GET al sistema dueño
+         * para obtener las polizas de un beneficiario
+         * 
+         * @return lista de polizas de un beneficiario
+         */
+        @GetMapping({ "/polizas/b/{nombres}/{primer_apellido}",
+                        "/polizas/b/{nombres}/{primer_apellido}/{segundo_apellido}" })
+        public List<Poliza> getPolizasBeneficiario(
+                @PathVariable(value = "nombres") String nombre,
+                @PathVariable(value = "primer_apellido") String primerApellido,
+                @PathVariable(value = "segundo_apellido", required = false) String segundoApellido) {
+
+                RestClient clienteRestPBeneficiario = RestClient.create();
+
+                // checamos si segundoApellido no es null
+                String uriDestino = (segundoApellido != null)
+                        ? "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}/{segundo_apellido}"
+                        : "http://nachintoch.mx:8080/polizas/b/{nombres}/{primer_apellido}";
+                // reviza primero si segundoApellido es distinto de null
+                // para realizar peticion get
+                List<Poliza> listaPolizasBeneficiario = (segundoApellido != null)
+                        ? (clienteRestPBeneficiario.get()
+                                .uri(uriDestino, nombre, primerApellido, segundoApellido)
+                                .retrieve()
+                                .body(new ParameterizedTypeReference<>() {
+                                }))
+                        // en el caso de que segundo apellido sea null
+                        // se hace la peticion get si el parametro segundoApeliido
+                        : (clienteRestPBeneficiario.get()
+                                .uri(uriDestino, nombre, primerApellido)
+                                .retrieve()
+                                .body(new ParameterizedTypeReference<>() {
+                                }));
+
+                if (listaPolizasBeneficiario == null
+                                || listaPolizasBeneficiario.isEmpty()) {
+                        return new ArrayList<>();
+                }
+                return listaPolizasBeneficiario;
+        }
+
+        /**
+         * Realiza una peticion GET al sistema dueño
+         * para devolver todas las polizas del tipo dado.
+         * Ruta: http://localhost:8081/polizas/tipo/{tipo}
+         * 
+         * @param tipo Identificador numérico del tipo de póliza (0: Auto, 1: Vida, 2: Médico)
+         * @return lista de polizas del tipo especificado
+         */
+        @GetMapping("/polizas/tipo/{tipo}")
+        public List<Poliza> getPolizasPorTipo(@PathVariable int tipo) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                List<Poliza> listaPolizas = clienteRestPoliza.get()
+                                .uri("http://nachintoch.mx:8080/polizas/{tipo}", tipo)
+                                .retrieve()
+                                .body(new ParameterizedTypeReference<>() {
+                                });
+
+                if (listaPolizas == null || listaPolizas.isEmpty()) {
+                        return new ArrayList<>();
+                }
+                return listaPolizas;
+        }
+
+        /**
+         * Realiza una peticion GET al sistema dueño
+         * para devolver todas las polizas de los clientes con el nombre dado.
+         * Rutas: http://localhost:8081/polizas/c/{nombres}/{primer_apellido}
+         * y
+         * http://localhost:8081/polizas/c/{nombres}/{primer_apellido}/{segundo_apellido}
+         * 
+         * @param nombres         nombre o nombres del cliente
+         * @param primerApellido  primer apellido del cliente
+         * @param segundoApellido segundo apellido del cliente, puede no venir
+         * @return lista de polizas de los clientes con ese nombre
+         */
+        @GetMapping({ "/polizas/c/{nombres}/{primer_apellido}",
+                        "/polizas/c/{nombres}/{primer_apellido}/{segundo_apellido}" })
+        public List<Poliza> getPolizasPorNombreCliente(
+                        @PathVariable("nombres") String nombres,
+                        @PathVariable("primer_apellido") String primerApellido,
+                        @PathVariable(value = "segundo_apellido", required = false) String segundoApellido) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+                String ruta = "http://nachintoch.mx:8080/polizas/c/{nombres}/{primer_apellido}";
+
+                if (segundoApellido == null) {
+                        return clienteRestPoliza.get()
+                                        .uri(ruta, nombres, primerApellido)
+                                        .retrieve()
+                                        .body(new ParameterizedTypeReference<>() {
+                                        });
+                } else {
+                        return clienteRestPoliza.get()
+                                        .uri(ruta + "/{segundo_apellido}", nombres, primerApellido, segundoApellido)
+                                        .retrieve()
+                                        .body(new ParameterizedTypeReference<>() {
+                                        });
+                }
+        }
+
+        /**
+         * Realiza una peticion GET al sistema dueño
+         * para devolver todas las polizas de las que son beneficiarias
+         * las personas con la fecha de nacimiento dada.
+         * Ruta: http://localhost:8081/polizas/b/{fecha_nacimiento}
+         * @param fechaNacimiento Fecha de nacimiento del beneficiario (formato YYYY-MM-DD)
+         * @return lista de polizas asociadas a beneficiarios con esa fecha de nacimiento
+         */
+        @GetMapping("/polizas/b/{fecha_nacimiento}")
+        public List<Poliza> getPolizasBeneficiarioPorFecha(
+                @PathVariable(value = "fecha_nacimiento") String fechaNacimiento) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                List<Poliza> listaPolizas = clienteRestPoliza.get()
+                        .uri("http://nachintoch.mx:8080/polizas/b/{fecha_nacimiento}", fechaNacimiento)
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        });
+
+                if (listaPolizas == null || listaPolizas.isEmpty()) {
+                return new ArrayList<>();
+                }
+                return listaPolizas;
+        }
+
+        /**
+         * Realiza una peticion DELETE al sistema dueño
+         * para borrar la poliza con la clave dada.
+         * Antes de borrar revisa que la poliza exista.
+         * Ruta: http://localhost:8081/poliza/{clave}
+         * @param clave clave de la poliza que se va a borrar
+         * @return la poliza borrada, o 404 si no existe
+         */
+        @DeleteMapping("/poliza/{clave}")
+        public ResponseEntity<Poliza> eliminarPoliza(@PathVariable UUID clave) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+                String ruta = "http://nachintoch.mx:8080/poliza/{clave}";
+
+                Poliza poliza = clienteRestPoliza.get()
+                        .uri(ruta, clave)
+                        .retrieve()
+                        .body(Poliza.class);
+
+                if (poliza == null) {
+                        return ResponseEntity.notFound().build();
+                }
+
+                clienteRestPoliza.delete()
+                        .uri(ruta, clave)
+                        .retrieve()
+                        .toBodilessEntity();
+
+                return ResponseEntity.ok(poliza);
+        }
+
+        /**
+         * Realiza una peticion PUT al sistema dueño
+         * para actualizar una poliza con los atributos dados.
+         * Ruta: http://localhost:8081/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}
+         * @param clave Identificador único (UUID) de la póliza a actualizar
+         * @param tipo Identificador numérico del tipo de póliza (0: Auto, 1: Vida, 2: Médico)
+         * @param monto Nuevo monto asegurado de la póliza
+         * @param descripcion Nueva descripción de la póliza
+         * @param curpCliente CURP del cliente asociado a la póliza
+         * @return objeto Poliza actualizado
+         */
+        @PutMapping("/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}")
+        public Poliza actualizarPoliza(
+                @PathVariable UUID clave,
+                @PathVariable int tipo,
+                @PathVariable double monto,
+                @PathVariable String descripcion,
+                @PathVariable("curp_cliente") String curpCliente) {
+
+                RestClient clienteRestPoliza = RestClient.create();
+
+                return clienteRestPoliza.put()
+                        .uri("http://nachintoch.mx:8080/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}",
+                                clave, tipo, monto, descripcion, curpCliente)
+                        .retrieve()
+                        .body(Poliza.class);
+        }
+        
+        // GET - Consultar una póliza por su clave
+        @GetMapping("/poliza/{clave}")
+        public Poliza getOne(@PathVariable UUID clave) {
+
+                RestClient polizaRest = RestClient.create();
+
+                return polizaRest.get()
+                        .uri("http://nachintoch.mx:8080/poliza/{clave}", clave)
+                        .retrieve()
+                        .body(Poliza.class);
+        }
+
+        /**
+         * Realiza peticion post al sistema dueño
+         * Crea una neva poliza con los atributos dados
+         * @param clave  identificador unico UUID para las polizas
+         * @param tipo   tipo numerico de poliza de seguro 1,2,3 etc
+         * @param monto  monto asegurado por la poliza
+         * @param descripcion  descriciion de la poliza
+         * @param curpCliente  currp de 18 caracteres
+         * 
+         * @return ResponseEntity responde con el link de la poliza regristrada
+         *         si es exitosa y si no lo es responde con http 502 con el destalle 
+         *         del error si falla.
+         */
+        @PostMapping("/poliza/{clave}/{tipo}/{monto}/{descripcion}/{curp_cliente}")
+        public ResponseEntity<?> postPoliza(
+                @PathVariable UUID clave,
+                @PathVariable int tipo,
+                @PathVariable double monto,
+                @PathVariable String descripcion,
+                @PathVariable(value = "curp_cliente") String curpCliente) {
+
+                        String uri = "http://nachintoch.mx:8080/poliza/{clave}"
+                                + "/{tipo}/{monto}/{descripcion}/{curp_cliente}";
+                        RestClient polizaRestClient = RestClient.create();
+                        /*Se en la descripcion manddan algo como Auto/camioneta se quitan
+                        * los / para evitar erroes.*/
+                        String formatDescripcion = descripcion.replace("/","-");
+                        //para asegurar que se pasan los argumentos en el orden correcto
+                        try {
+                                Poliza polizaNueva = polizaRestClient.post()
+                                .uri(uri,clave,tipo,monto,formatDescripcion,curpCliente)
+                                .retrieve()
+                                .body(Poliza.class); 
+                                return ResponseEntity.ok(polizaNueva);
+                        } catch (Exception e) {
+                               return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                                .body("No se pudo registrar la poiliza " + e.getMessage());
+                        }
+        }
+
+}

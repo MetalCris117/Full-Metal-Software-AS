@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Axolotl Policy · ' + ${tituloPestana}">Axolotl Policy · Notificación</title>
+    <link rel="stylesheet" th:href="@{/css/formulario-usuario.css}">
+    <link rel="stylesheet" th:href="@{/css/notificacion.css}">
+</head>
+
+<body>
+
+    <main class="contenedor-notificacion">
+
+        <!-- CASO 1: OPERACIÓN EXITOSA -->
+        <div th:if="${esExito}" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div class="tarjeta-exito">
+                <div class="circulo-exito">&#10003;</div>
+                <span class="etiqueta-exito" th:text="${etiqueta}">OPERACIÓN EXITOSA</span>
+                <h1 class="titulo-notificacion" th:text="${titulo}">Operación realizada correctamente</h1>
+                <p class="mensaje-notificacion" th:text="${mensaje}">
+                    Los cambios se han guardado y sincronizado con el Sistema Dueño.
+                </p>
+                <div class="botones-notificacion">
+                    <a th:href="@{/}" class="boton-primario">Volver al Inicio</a>
+                </div>
+            </div>
+            <span class="nota-inferior">Axolotl Policy · Gestión de seguros</span>
+        </div>
+
+        <!-- CASO 2: ERRORES 503 (EX-DND) Y 404 (EX-CNR) -->
+        <div th:unless="${esExito}" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="codigo-error" th:text="${codigo}">503</div>
+
+            <span class="etiqueta-error" th:text="${etiqueta}">INTERRUPCIÓN TEMPORAL</span>
+
+            <h1 class="titulo-notificacion" th:text="${titulo}">
+                El servidor de pólizas no está disponible en este momento
+            </h1>
+
+            <p class="mensaje-notificacion" th:text="${mensaje}">
+                No podemos conectar con el servidor en este momento. Por favor, inténtalo de nuevo más tarde.
+            </p>
+
+            <div class="botones-notificacion">
+                <a th:href="@{/}" class="boton-primario">Volver al Inicio</a>
+
+                <a th:if="${urlSecundaria != null}"
+                   th:href="@{${urlSecundaria}}"
+                   class="boton-secundario"
+                   th:text="${textoSecundaria}">
+                    Reintentar operación
+                </a>
+            </div>
+
+            <span class="nota-inferior" th:text="${pieNotificacion}">Axolotl Policy · Gestión de seguros</span>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
